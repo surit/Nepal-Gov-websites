@@ -13,6 +13,7 @@ const sites = [
   { name: "Office of the Prime Minister", url: "https://opmcm.gov.np", desc: "Prime Minister and Council of Ministers.", cat: "Executive", status: "active" },
 
   // Ministries
+    { name: "Free Health Dashboard - MoHP", url: "https://freehealth.mohp.gov.np", desc: "Real-time health data & service monitoring dashboard by Ministry of Health.", cat: "Ministry", status: "active" },
   { name: "Ministry of Foreign Affairs", url: "https://mofa.gov.np", desc: "Foreign relations & diplomatic services.", cat: "Ministry", status: "active" },
   { name: "Ministry of Finance", url: "https://mof.gov.np", desc: "Budget, fiscal policy, economic data.", cat: "Ministry", status: "active" },
   { name: "Ministry of Home Affairs", url: "https://moha.gov.np", desc: "Security, immigration, civil registration.", cat: "Ministry", status: "active" },
@@ -30,6 +31,7 @@ const sites = [
   { name: "Ministry of Women, Children and Senior Citizens", url: "https://mowcsc.gov.np", desc: "Gender equality, child protection & elderly welfare.", cat: "Ministry", status: "active" },
   { name: "Ministry of Youth and Sports", url: "https://moys.gov.np", desc: "Youth development, sports promotion & national games.", cat: "Ministry", status: "active" },
   { name: "Ministry of Law, Justice and Parliamentary Affairs", url: "https://moljpa.gov.np", desc: "Legal reforms, justice administration & parliamentary support.", cat: "Ministry", status: "active" },
+
 
   // Departments
   { name: "Department of Immigration", url: "https://immigration.gov.np", desc: "Visa services & immigration control.", cat: "Department", status: "active" },
