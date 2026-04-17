@@ -13,7 +13,7 @@ const sites = [
   { name: "Office of the Prime Minister", url: "https://opmcm.gov.np", desc: "Prime Minister and Council of Ministers.", cat: "Executive", status: "active" },
 
   // Ministries
-    { name: "Free Health Dashboard - MoHP", url: "https://freehealth.mohp.gov.np", desc: "Real-time health data & service monitoring dashboard by Ministry of Health.", cat: "Ministry", status: "active" },
+  { name: "Free Health Dashboard - MoHP", url: "https://freehealth.mohp.gov.np", desc: "Real-time health data & service monitoring dashboard by Ministry of Health.", cat: "Ministry", status: "active" },
   { name: "Ministry of Foreign Affairs", url: "https://mofa.gov.np", desc: "Foreign relations & diplomatic services.", cat: "Ministry", status: "active" },
   { name: "Ministry of Finance", url: "https://mof.gov.np", desc: "Budget, fiscal policy, economic data.", cat: "Ministry", status: "active" },
   { name: "Ministry of Home Affairs", url: "https://moha.gov.np", desc: "Security, immigration, civil registration.", cat: "Ministry", status: "active" },
