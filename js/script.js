@@ -64,8 +64,8 @@ const sites = [
   { name: "Trade and Export Promotion Centre", url: "https://tepc.gov.np", desc: "Export facilitation & trade support services.", cat: "Board", status: "active" },
 
   // ========== Provincial Governments ==========
-  { name: "Koshi Province", url: "https://p1.gov.np", desc: "Provincial government services for Koshi (Province 1).", cat: "Provincial Govt", status: "active" },
-  { name: "Madhesh Province", url: "https://p2.gov.np", desc: "Provincial government services for Madhesh (Province 2).", cat: "Provincial Govt", status: "active" },
+  { name: "Koshi Province", url: "https://koshi.gov.np", desc: "Provincial government services for Koshi (Province 1).", cat: "Provincial Govt", status: "active" },
+  { name: "Madhesh Province", url: "https://madhesh.gov.np/", desc: "Provincial government services for Madhesh (Province 2).", cat: "Provincial Govt", status: "active" },
   { name: "Bagmati Province", url: "https://bagmati.gov.np", desc: "Provincial government services for Bagmati (Province 3).", cat: "Provincial Govt", status: "active" },
   { name: "Gandaki Province", url: "https://gandaki.gov.np", desc: "Provincial government services for Gandaki (Province 4).", cat: "Provincial Govt", status: "active" },
   { name: "Lumbini Province", url: "https://lumbini.gov.np", desc: "Provincial government services for Lumbini (Province 5).", cat: "Provincial Govt", status: "active" },
