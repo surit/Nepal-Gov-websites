@@ -1,13 +1,16 @@
-// Nepal Government Websites Directory - Complete Site List
+// Data: Add/edit sites here
+// 🔍 URLs marked with ⚠️ need verification before publishing
 const sites = [
   // ========== Constitutional Bodies ==========
-  { name: "Office of the President", url: "https://presidentofnepal.gov.np", desc: "Official office of the President of Nepal.", cat: "Constitutional", status: "active" },
+  { name: "Office of the President", url: "https://president.gov.np", desc: "Official office of the President of Nepal.", cat: "Constitutional", status: "active" },
+  // ⚠️ New list shows presidentofnepal.gov.np — verify which is canonical
   { name: "Office of the Vice President", url: "https://vp.gov.np", desc: "Official office of the Vice President of Nepal.", cat: "Constitutional", status: "active" },
-  { name: "Supreme Court of Nepal", url: "https://supremecourt.gov.np", desc: "Highest court of Nepal with appellate jurisdiction.", cat: "Constitutional", status: "active" },
+  { name: "Supreme Court of Nepal", url: "https://supremecourt.gov.np", desc: "Highest court of Nepal.", cat: "Constitutional", status: "active" },
   { name: "Public Service Commission Nepal", url: "https://psc.gov.np", desc: "Recruitment for civil service & government positions.", cat: "Constitutional", status: "active" },
   { name: "Election Commission Nepal", url: "https://election.gov.np", desc: "Conducting free & fair elections at all levels.", cat: "Constitutional", status: "active" },
   { name: "Commission for the Investigation of Abuse of Authority", url: "https://ciaa.gov.np", desc: "Anti-corruption watchdog & integrity enforcement.", cat: "Constitutional", status: "active" },
-  { name: "Office of the Auditor General Nepal", url: "https://oagnepal.gov.np", desc: "Audit of government accounts & public expenditure.", cat: "Constitutional", status: "active" },
+  { name: "Office of the Auditor General Nepal", url: "https://oag.gov.np", desc: "Audit of government accounts & public expenditure.", cat: "Constitutional", status: "active" },
+  // ⚠️ New list shows oagnepal.gov.np — verify
   { name: "National Women Commission", url: "https://nwc.gov.np", desc: "Promoting gender equality & women's rights.", cat: "Constitutional", status: "active" },
   { name: "National Planning Commission Nepal", url: "https://npc.gov.np", desc: "National development planning & policy coordination.", cat: "Constitutional", status: "active" },
 
@@ -25,6 +28,7 @@ const sites = [
   { name: "Ministry of Communication & Information Technology", url: "https://mocit.gov.np", desc: "ICT policy, digital governance & IT infrastructure.", cat: "Ministry", status: "active" },
   { name: "Ministry of Federal Affairs & General Administration", url: "https://mofaga.gov.np", desc: "Federal coordination & public administration.", cat: "Ministry", status: "active" },
   { name: "Ministry of Energy, Water Resources & Irrigation", url: "https://moewri.gov.np", desc: "Energy, hydropower & irrigation development.", cat: "Ministry", status: "active" },
+  // ⚠️ Old URL mowrri.gov.np was inactive — new list shows moewri.gov.np (verify redirect)
   { name: "Ministry of Agriculture & Livestock Development", url: "https://moald.gov.np", desc: "Agricultural development & livestock services.", cat: "Ministry", status: "active" },
   { name: "Ministry of Industry, Commerce & Supplies", url: "https://moics.gov.np", desc: "Industrial policy, trade regulation & supply management.", cat: "Ministry", status: "active" },
   { name: "Ministry of Culture, Tourism & Civil Aviation", url: "https://tourism.gov.np", desc: "Tourism promotion & aviation regulation.", cat: "Ministry", status: "active" },
@@ -40,12 +44,12 @@ const sites = [
 
   // ========== Departments ==========
   { name: "Department of Immigration", url: "https://nepalimmigration.gov.np", desc: "Visa services & immigration control.", cat: "Department", status: "active" },
+  // ⚠️ Old URL immigration.gov.np — new list shows nepalimmigration.gov.np (verify)
   { name: "Department of Passports", url: "https://nepalpassport.gov.np", desc: "Passport issuance & renewal.", cat: "Department", status: "active" },
   { name: "Department of Customs", url: "https://customs.gov.np", desc: "Customs clearance, duty collection & trade facilitation.", cat: "Department", status: "active" },
   { name: "Inland Revenue Department", url: "https://ird.gov.np", desc: "Tax administration & revenue collection.", cat: "Department", status: "active" },
   { name: "Department of Transport Management", url: "https://dotm.gov.np", desc: "Vehicle registration, licenses & road safety.", cat: "Department", status: "active" },
   { name: "Department of National ID & Civil Registration", url: "https://donidcr.gov.np", desc: "National ID cards & birth/death registration.", cat: "Department", status: "active" },
-  { name: "Department of Foreign Employment", url: "https://dofe.gov.np", desc: "Overseas employment services & migrant welfare.", cat: "Department", status: "active" },
   { name: "Nepal Police", url: "https://nepalpolice.gov.np", desc: "Law enforcement & public safety services.", cat: "Department", status: "active" },
   { name: "Armed Police Force Nepal", url: "https://apf.gov.np", desc: "Border security, counter-terrorism & disaster response.", cat: "Department", status: "active" },
   { name: "Department of Information & Broadcasting", url: "https://doib.gov.np", desc: "Media regulation, press accreditation & public communication.", cat: "Department", status: "active" },
@@ -53,8 +57,6 @@ const sites = [
   { name: "Department of Roads", url: "https://dor.gov.np", desc: "Road construction, maintenance & infrastructure.", cat: "Department", status: "active" },
   { name: "Department of Hydrology & Meteorology", url: "https://dhm.gov.np", desc: "Weather forecasting, flood alerts & climate data.", cat: "Department", status: "active" },
   { name: "Department of Food Technology & Quality Control", url: "https://dftqc.gov.np", desc: "Food safety standards & quality certification.", cat: "Department", status: "active" },
-  { name: "Department of Land Management & Archive", url: "https://dolma.gov.np", desc: "Land records & archives management.", cat: "Department", status: "active" },
-  { name: "Department of Livestock Services", url: "https://dls.gov.np", desc: "Livestock development & veterinary services.", cat: "Department", status: "active" },
 
   // ========== Authorities & Boards ==========
   { name: "Nepal Rastra Bank", url: "https://nrb.org.np", desc: "Central bank & monetary authority.", cat: "Authority", status: "active" },
@@ -63,7 +65,7 @@ const sites = [
   { name: "Nepal Tourism Board", url: "https://ntb.gov.np", desc: "Tourism promotion & marketing.", cat: "Board", status: "active" },
   { name: "Trade and Export Promotion Centre", url: "https://tepc.gov.np", desc: "Export facilitation & trade support services.", cat: "Board", status: "active" },
 
-  // ========== Provincial Governments ==========
+  // ========== Provincial Governments (NEW CATEGORY) ==========
   { name: "Koshi Province", url: "https://p1.gov.np", desc: "Provincial government services for Koshi (Province 1).", cat: "Provincial Govt", status: "active" },
   { name: "Madhesh Province", url: "https://p2.gov.np", desc: "Provincial government services for Madhesh (Province 2).", cat: "Provincial Govt", status: "active" },
   { name: "Bagmati Province", url: "https://bagmati.gov.np", desc: "Provincial government services for Bagmati (Province 3).", cat: "Provincial Govt", status: "active" },
@@ -81,7 +83,7 @@ const sites = [
   { name: "Birgunj Metropolitan City", url: "https://birgunjmun.gov.np", desc: "Municipal services for Birgunj residents.", cat: "Local Govt", status: "active" },
 ];
 
-// ========== DOM Elements & Logic ==========
+// ========== DOM & Logic (unchanged) ==========
 const grid = document.getElementById('grid');
 const searchInput = document.getElementById('search');
 const categoryNav = document.getElementById('category-nav');
