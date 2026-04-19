@@ -1,0 +1,42 @@
+[build]
+  publish = "."
+  command = ""
+
+# Production: main branch → nepal.surit.com.np
+[context.production]
+  [context.production.environment]
+    CONTEXT = "production"
+    SITE_NAME = "Nepal Government Websites"
+
+# Staging: staging branch → devnepal.surit.com.np
+[context.branch-deploy]
+  [context.branch-deploy.environment]
+    CONTEXT = "staging"
+    SITE_NAME = "Nepal Government Websites (Staging)"
+
+# Specific config for staging branch
+[context.staging]
+  [context.staging.environment]
+    CONTEXT = "staging"
+    SITE_NAME = "Nepal Government Websites (Staging)"
+
+# Redirect www to naked domain (optional but recommended)
+[[redirects]]
+  from = "https://www.nepal.surit.com.np/*"
+  to = "https://nepal.surit.com.np/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.devnepal.surit.com.np/*"
+  to = "https://devnepal.surit.com.np/:splat"
+  status = 301
+  force = true
+
+# Security headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
