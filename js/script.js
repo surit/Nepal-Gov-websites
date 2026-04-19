@@ -111,13 +111,6 @@ const sitesData = [
   { name: "Lumbini Province", url: "https://lumbini.gov.np", desc: "Provincial government services for Lumbini (Province 5).", cat: "Provincial Govt", status: "active" },
   { name: "Karnali Province", url: "https://karnali.gov.np", desc: "Provincial government services for Karnali (Province 6).", cat: "Provincial Govt", status: "active" },
   { name: "Sudurpaschim Province", url: "https://sudurpaschim.gov.np", desc: "Provincial government services for Sudurpaschim (Province 7).", cat: "Provincial Govt", status: "active" },
-  { name: "Koshi Province - Chief Minister Office", url: "https://p1.gov.np", desc: "Office of Chief Minister and Council of Ministers, Koshi Province.", cat: "Provincial Govt", status: "active" },
-  { name: "Madhesh Province - Chief Minister Office", url: "https://p2.gov.np", desc: "Office of Chief Minister and Council of Ministers, Madhesh Province.", cat: "Provincial Govt", status: "active" },
-  { name: "Bagmati Province - Chief Minister Office", url: "https://bagmati.gov.np/cm-office", desc: "Office of Chief Minister and Council of Ministers, Bagmati Province.", cat: "Provincial Govt", status: "active" },
-  { name: "Gandaki Province - Chief Minister Office", url: "https://gandaki.gov.np/cm-office", desc: "Office of Chief Minister and Council of Ministers, Gandaki Province.", cat: "Provincial Govt", status: "active" },
-  { name: "Lumbini Province - Chief Minister Office", url: "https://lumbini.gov.np/cm-office", desc: "Office of Chief Minister and Council of Ministers, Lumbini Province.", cat: "Provincial Govt", status: "active" },
-  { name: "Karnali Province - Chief Minister Office", url: "https://karnali.gov.np/cm-office", desc: "Office of Chief Minister and Council of Ministers, Karnali Province.", cat: "Provincial Govt", status: "active" },
-  { name: "Sudurpaschim Province - Chief Minister Office", url: "https://sudurpaschim.gov.np/cm-office", desc: "Office of Chief Minister and Council of Ministers, Sudurpaschim Province.", cat: "Provincial Govt", status: "active" },
 
   // ========== Local Governments (Metropolitan & Sub-Metropolitan Cities) ==========
   { name: "Kathmandu Metropolitan City", url: "https://kathmandu.gov.np", desc: "Local services, permits, notices.", cat: "Local Govt", status: "active" },
