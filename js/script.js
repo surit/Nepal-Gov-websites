@@ -1,9 +1,9 @@
-// Nepal Government Websites Directory - V2 Ready
-// ✅ Data sanitized, events delegated, i18n scaffolded
+// js/script.js - V2 Complete (Inline Data Version)
+// No external JSON fetch - works everywhere including file://
 
-// ========== SANITIZED DATA (trimmed strings) ==========
-const sites = [
-  // Constitutional Bodies
+// ========== SANITIZED DATA (trimmed, no trailing spaces) ==========
+const sitesData = [
+  // ========== Constitutional Bodies ==========
   { name: "Office of the President", url: "https://presidentofnepal.gov.np", desc: "Official office of the President of Nepal.", cat: "Constitutional", status: "active" },
   { name: "Office of the Vice President", url: "https://vp.gov.np", desc: "Official office of the Vice President of Nepal.", cat: "Constitutional", status: "active" },
   { name: "Supreme Court of Nepal", url: "https://supremecourt.gov.np", desc: "Highest court of Nepal with appellate jurisdiction.", cat: "Constitutional", status: "active" },
@@ -16,10 +16,10 @@ const sites = [
   { name: "State Public Service Commission Gandaki", url: "https://spscgandaki.gov.np", desc: "Provincial civil service recruitment for Gandaki Province.", cat: "Constitutional", status: "active" },
   { name: "State Public Service Commission Lumbini", url: "https://psclumbini.gov.np", desc: "Provincial civil service recruitment for Lumbini Province.", cat: "Constitutional", status: "active" },
 
-  // Executive
+  // ========== Executive ==========
   { name: "Office of the Prime Minister", url: "https://opmcm.gov.np", desc: "Prime Minister and Council of Ministers.", cat: "Executive", status: "active" },
 
-  // Ministries (trimmed examples - apply to all)
+  // ========== Ministries ==========
   { name: "Ministry of Finance", url: "https://mof.gov.np", desc: "Budget, fiscal policy, economic data.", cat: "Ministry", status: "active" },
   { name: "Ministry of Home Affairs", url: "https://moha.gov.np", desc: "Security, immigration, civil registration.", cat: "Ministry", status: "active" },
   { name: "Ministry of Foreign Affairs", url: "https://mofa.gov.np", desc: "Foreign relations & diplomatic services.", cat: "Ministry", status: "active" },
@@ -43,7 +43,7 @@ const sites = [
   { name: "Ministry of Law, Justice & Parliamentary Affairs", url: "https://moljpa.gov.np", desc: "Legal reforms, justice administration & parliamentary support.", cat: "Ministry", status: "active" },
   { name: "Ministry of Labour, Employment & Social Security", url: "https://moless.gov.np", desc: "Labor rights, employment services & social security.", cat: "Ministry", status: "active" },
 
-  // Departments (trimmed examples)
+  // ========== Departments ==========
   { name: "Department of Immigration", url: "https://nepalimmigration.gov.np", desc: "Visa services & immigration control.", cat: "Department", status: "active" },
   { name: "Department of Passports", url: "https://nepalpassport.gov.np", desc: "Passport issuance & renewal.", cat: "Department", status: "active" },
   { name: "Department of Customs", url: "https://customs.gov.np", desc: "Customs clearance, duty collection & trade facilitation.", cat: "Department", status: "active" },
@@ -73,7 +73,7 @@ const sites = [
   { name: "Department of Urban Development and Building Construction", url: "https://dudbc.gov.np", desc: "Urban planning, building codes & construction regulation.", cat: "Department", status: "active" },
   { name: "Department of Water Resources and Irrigation", url: "https://dwri.gov.np", desc: "Water resource management, irrigation systems & watershed development.", cat: "Department", status: "active" },
 
-  // Authorities & Boards (trimmed)
+  // ========== Authorities & Boards ==========
   { name: "Nepal Rastra Bank", url: "https://nrb.org.np", desc: "Central bank & monetary authority.", cat: "Authority", status: "active" },
   { name: "Nepal Telecommunications Authority", url: "https://nta.gov.np", desc: "Telecom & broadcasting regulation.", cat: "Authority", status: "active" },
   { name: "Civil Aviation Authority of Nepal", url: "https://caanepal.gov.np", desc: "Aviation safety & airport management.", cat: "Authority", status: "active" },
@@ -98,12 +98,12 @@ const sites = [
   { name: "Alternative Energy Promotion Centre", url: "https://aepc.gov.np", desc: "Renewable energy promotion, solar programs & clean energy access.", cat: "Authority", status: "active" },
   { name: "Central Law Library", url: "https://lawlibrary.gov.np", desc: "Legal resources, case law & legislative documents.", cat: "Authority", status: "active" },
 
-  // Commissions
+  // ========== Commissions ==========
   { name: "Medical Education Commission", url: "https://mec.gov.np", desc: "Medical education regulation, licensing & quality assurance.", cat: "Commission", status: "active" },
   { name: "Teachers Service Commission", url: "https://tsc.gov.np", desc: "Teacher recruitment, licensing & professional standards.", cat: "Commission", status: "active" },
   { name: "Nepal Law Commission", url: "https://lawcommission.gov.np", desc: "Law reform, legal research & legislative drafting.", cat: "Commission", status: "active" },
 
-  // Provincial Governments
+  // ========== Provincial Governments ==========
   { name: "Koshi Province", url: "https://koshi.gov.np", desc: "Provincial government services for Koshi (Province 1).", cat: "Provincial Govt", status: "active" },
   { name: "Madhesh Province", url: "https://madhesh.gov.np", desc: "Provincial government services for Madhesh (Province 2).", cat: "Provincial Govt", status: "active" },
   { name: "Bagmati Province", url: "https://bagmati.gov.np", desc: "Provincial government services for Bagmati (Province 3).", cat: "Provincial Govt", status: "active" },
@@ -119,7 +119,7 @@ const sites = [
   { name: "Karnali Province - Chief Minister Office", url: "https://karnali.gov.np/cm-office", desc: "Office of Chief Minister and Council of Ministers, Karnali Province.", cat: "Provincial Govt", status: "active" },
   { name: "Sudurpaschim Province - Chief Minister Office", url: "https://sudurpaschim.gov.np/cm-office", desc: "Office of Chief Minister and Council of Ministers, Sudurpaschim Province.", cat: "Provincial Govt", status: "active" },
 
-  // Local Governments
+  // ========== Local Governments (Metropolitan & Sub-Metropolitan Cities) ==========
   { name: "Kathmandu Metropolitan City", url: "https://kathmandu.gov.np", desc: "Local services, permits, notices.", cat: "Local Govt", status: "active" },
   { name: "Lalitpur Metropolitan City", url: "https://lmc.gov.np", desc: "Municipal services for Lalitpur residents.", cat: "Local Govt", status: "active" },
   { name: "Pokhara Metropolitan City", url: "https://pokharamun.gov.np", desc: "Municipal services for Pokhara residents.", cat: "Local Govt", status: "active" },
@@ -132,6 +132,8 @@ const sites = [
   { name: "Itahari Sub-Metropolitan City", url: "https://itaharimun.gov.np", desc: "Municipal services for Itahari, Sunsari.", cat: "Local Govt", status: "active" },
   { name: "Dharan Sub-Metropolitan City", url: "https://dharanmun.gov.np", desc: "Municipal services for Dharan, Sunsari.", cat: "Local Govt", status: "active" },
   { name: "Butwal Sub-Metropolitan City", url: "https://butwalmun.gov.np", desc: "Municipal services for Butwal, Rupandehi.", cat: "Local Govt", status: "active" },
+
+  // ========== Municipalities (Major) ==========
   { name: "Mechinagar Municipality", url: "https://mechinagarmun.gov.np", desc: "Municipal services for Mechinagar, Jhapa.", cat: "Local Govt", status: "active" },
   { name: "Damak Municipality", url: "https://damakmun.gov.np", desc: "Municipal services for Damak, Jhapa.", cat: "Local Govt", status: "active" },
   { name: "Birtamod Municipality", url: "https://birtamodmun.gov.np", desc: "Municipal services for Birtamod, Jhapa.", cat: "Local Govt", status: "active" },
@@ -173,16 +175,32 @@ const sites = [
   { name: "Konjyosom Rural Municipality", url: "https://konjyosomrm.gov.np", desc: "Rural municipal services for Konjyosom, Sindhupalchok.", cat: "Local Govt", status: "active" },
   { name: "Gauradaha Municipality", url: "https://gauradahamun.gov.np", desc: "Municipal services for Gauradaha, Jhapa.", cat: "Local Govt", status: "active" },
 
-  // Hospitals
+  // ========== Portals & Service Platforms ==========
+ // { name: "Online Driving License System", url: "https://drivinglicense.gov.np", desc: "Online driving license application, renewal & verification system.", cat: "Portal", status: "active" },
+  //{ name: "Centralized Email System", url: "https://email.gov.np", desc: "Government email services for officials and departments.", cat: "Portal", status: "active" },
+  //{ name: "Nepal Government National Portal", url: "https://nepal.gov.np", desc: "Official portal of Government of Nepal - gateway to all services.", cat: "Portal", status: "active" },
+  //{ name: "Nepal Kanun Patrika", url: "https://kanunpatrika.gov.np", desc: "Official gazette publication, laws & legal notices.", cat: "Portal", status: "active" },
+  //{ name: "Nepal Trade Information Portal", url: "https://ntip.gov.np", desc: "Trade data, market information & export-import guidance.", cat: "Portal", status: "active" },
+
+
+
+  // ========== Hospitals & Health Institutions ==========
   { name: "Bharatpur Hospital", url: "https://bharatpurhospital.gov.np", desc: "Government teaching hospital - ENT, general physician, dental services.", cat: "Hospital", status: "active" },
   { name: "Kanti Children's Hospital", url: "https://kantichildrenhospital.gov.np", desc: "Specialized pediatric hospital for children's healthcare.", cat: "Hospital", status: "active" },
 
-  // Programs, Trusts & Institutes
+  // ========== Programs, Trusts & Institutes ==========
   { name: "Lumbini Development Trust", url: "https://lumbinitrust.gov.np", desc: "Lumbini development, heritage conservation & pilgrimage management.", cat: "Trust", status: "active" },
   { name: "Local Governance and Community Development Programme", url: "https://lgcdp.gov.np", desc: "Local governance strengthening, community development & poverty reduction.", cat: "Program", status: "active" },
   { name: "Provincial and Local Governance Support Program", url: "https://plgsp.gov.np", desc: "Support for provincial and local government capacity building.", cat: "Program", status: "active" },
   { name: "Policy Research Institute", url: "https://pri.gov.np", desc: "Policy research, analysis & evidence-based recommendations.", cat: "Institute", status: "active" },
 ];
+
+// ========== State ==========
+let sites = sitesData;
+let currentCategory = 'All';
+let searchQuery = '';
+let currentLang = localStorage.getItem('lang') || 'en';
+const lastUpdated = '2026-04-20';
 
 // ========== DOM Elements ==========
 const grid = document.getElementById('grid');
@@ -190,11 +208,7 @@ const searchInput = document.getElementById('search');
 const categoryNav = document.getElementById('category-nav');
 const siteCountEl = document.getElementById('site-count');
 const lastUpdatedEl = document.getElementById('last-updated');
-
-// ========== State ==========
-let currentCategory = 'All';
-let searchQuery = '';
-const lang = localStorage.getItem('lang') || 'en';
+const langToggle = document.getElementById('lang-toggle');
 
 // ========== Helpers ==========
 const escapeHtml = (str) => {
@@ -203,127 +217,155 @@ const escapeHtml = (str) => {
   return div.innerHTML;
 };
 
-const clean = (str) => str?.trim() || '';
-
 const formatDate = (dateStr) => {
-  const d = new Date(dateStr);
-  return d.toLocaleDateString(lang === 'ne' ? 'ne-NP' : 'en-US', {
-    year: 'numeric', month: 'short', day: 'numeric'
-  });
+  if (!dateStr) return '-';
+  const date = new Date(dateStr);
+  const options = { year: 'numeric', month: 'short', day: 'numeric' };
+  return date.toLocaleDateString(currentLang === 'ne' ? 'ne-NP' : 'en-US', options);
+};
+
+const getTranslation = (key) => {
+  return translations?.[currentLang]?.[key] || translations?.en?.[key] || key;
 };
 
 // ========== Render Functions ==========
 function renderCategories() {
-  const categories = ['All', ...new Set(sites.map(s => clean(s.cat)))];
-  categoryNav.innerHTML = categories.map(cat =>
-    `<button class="cat-btn ${cat === currentCategory ? 'active' : ''}" 
-             data-cat="${escapeHtml(cat)}" 
-             aria-pressed="${cat === currentCategory}">
-       ${escapeHtml(cat)}
-     </button>`
-  ).join('');
+  const categories = ['All', ...new Set(sites.map(s => s.cat))];
+  categoryNav.innerHTML = categories.map(cat => `
+    <button class="cat-btn ${cat === currentCategory ? 'active' : ''}" 
+            data-cat="${escapeHtml(cat)}" 
+            aria-pressed="${cat === currentCategory}">
+      ${escapeHtml(cat)}
+    </button>
+  `).join('');
 }
 
 function renderGrid() {
   const q = searchQuery.toLowerCase();
   const filtered = sites.filter(s => {
-    const name = clean(s.name).toLowerCase();
-    const url = clean(s.url).toLowerCase();
-    const desc = clean(s.desc).toLowerCase();
-    const cat = clean(s.cat).toLowerCase();
-    
-    const matchesCat = currentCategory === 'All' || cat === currentCategory.toLowerCase();
-    const matchesSearch = !q || name.includes(q) || url.includes(q) || desc.includes(q) || cat.includes(q);
+    const matchesCat = currentCategory === 'All' || s.cat === currentCategory;
+    const matchesSearch = !q || 
+      s.name.toLowerCase().includes(q) || 
+      s.url.toLowerCase().includes(q) || 
+      s.desc.toLowerCase().includes(q) || 
+      s.cat.toLowerCase().includes(q);
     return matchesCat && matchesSearch;
   });
 
+  if (siteCountEl) {
+    siteCountEl.innerHTML = `📈 <strong>${filtered.length}</strong> sites`;
+  }
+
   if (filtered.length === 0) {
-    grid.innerHTML = `<p class="empty">No sites match your filters.</p>`;
+    grid.innerHTML = `<p class="empty">${getTranslation('noResults') || 'No sites match your filters.'}</p>`;
     return;
   }
 
   grid.innerHTML = filtered.map(s => {
-    const name = escapeHtml(clean(s.name));
-    const url = clean(s.url);
-    const desc = escapeHtml(clean(s.desc));
-    const cat = escapeHtml(clean(s.cat));
-    const status = s.status === 'active' ? 'active' : 'inactive';
-    const statusText = status === 'active' ? 'Online' : 'Offline';
-    const displayUrl = url.replace(/^https?:\/\//, '');
+    const displayUrl = s.url.replace(/^https?:\/\//, '');
+    const statusText = s.status === 'active' ? (getTranslation('online') || 'Online') : (getTranslation('offline') || 'Offline');
     
     return `
       <article class="card">
-        <h3>${name}</h3>
-        <a href="${url}" target="_blank" rel="noopener noreferrer">${displayUrl}</a>
-        <p>${desc}</p>
+        <h3>${escapeHtml(s.name)}</h3>
+        <a href="${escapeHtml(s.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(displayUrl)}</a>
+        <p>${escapeHtml(s.desc)}</p>
         <div class="card-footer">
-          <span class="tag">${cat}</span>
-          <div class="status ${status}">${statusText}</div>
+          <span class="tag">${escapeHtml(s.cat)}</span>
+          <div class="status ${s.status}">${statusText}</div>
         </div>
-        <button class="copy-btn" data-url="${url}" aria-label="Copy URL">📋 Copy URL</button>
+        <button class="copy-btn" data-url="${escapeHtml(s.url)}" aria-label="${getTranslation('copyUrl') || 'Copy URL'}">
+          ${getTranslation('copyUrl') || '📋 Copy URL'}
+        </button>
       </article>
     `;
   }).join('');
-
-  // Update site count
-  siteCountEl.textContent = filtered.length;
 }
 
-// ========== Event Delegation (✅ No memory leaks) ==========
-categoryNav.addEventListener('click', (e) => {
+function applyTranslations() {
+  document.documentElement.lang = currentLang;
+  
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    const translation = getTranslation(key);
+    if (translation) el.textContent = translation;
+  });
+  
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.dataset.i18nPlaceholder;
+    const translation = getTranslation(key);
+    if (translation) el.placeholder = translation;
+  });
+  
+  if (langToggle) {
+    langToggle.textContent = getTranslation('langToggle');
+  }
+  
+  if (lastUpdatedEl) {
+    lastUpdatedEl.textContent = formatDate(lastUpdated);
+  }
+  
+  renderGrid();
+}
+
+// ========== Event Handlers ==========
+function handleCategoryClick(e) {
   const btn = e.target.closest('.cat-btn');
   if (!btn) return;
-  
   currentCategory = btn.dataset.cat;
-  renderCategories(); // re-render active state
+  renderCategories();
   renderGrid();
-});
+}
 
-searchInput.addEventListener('input', (e) => {
+function handleSearchInput(e) {
   searchQuery = e.target.value.trim();
   renderGrid();
-});
+}
 
-// Copy URL button (delegated)
-grid.addEventListener('click', (e) => {
+async function handleCopyUrl(e) {
   const btn = e.target.closest('.copy-btn');
   if (!btn) return;
   
   const url = btn.dataset.url;
-  navigator.clipboard.writeText(url).then(() => {
-    const original = btn.textContent;
-    btn.textContent = '✓ Copied!';
+  try {
+    await navigator.clipboard.writeText(url);
+    const original = btn.innerHTML;
+    btn.innerHTML = getTranslation('copied') || '✓ Copied!';
     btn.classList.add('copied');
     setTimeout(() => {
-      btn.textContent = original;
+      btn.innerHTML = original;
       btn.classList.remove('copied');
-    }, 1500);
-  });
-});
+    }, 2000);
+  } catch (err) {
+    console.error('Copy failed:', err);
+  }
+}
 
-// ========== i18n Scaffold (V2 Ready) ==========
-function applyTranslations() {
-  if (typeof translations === 'undefined' || !translations[lang]) return;
-  
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.dataset.i18n;
-    if (translations[lang][key]) {
-      el.textContent = translations[lang][key];
-    }
-  });
+function handleLangToggle() {
+  currentLang = currentLang === 'en' ? 'ne' : 'en';
+  localStorage.setItem('lang', currentLang);
+  applyTranslations();
+}
+
+// ========== Event Listeners ==========
+categoryNav.addEventListener('click', handleCategoryClick);
+searchInput.addEventListener('input', handleSearchInput);
+grid.addEventListener('click', handleCopyUrl);
+if (langToggle) {
+  langToggle.addEventListener('click', handleLangToggle);
 }
 
 // ========== Init ==========
 function init() {
-  // Update last updated date (set to build time in CI/CD later)
-  if (lastUpdatedEl) {
-    lastUpdatedEl.textContent = formatDate(new Date().toISOString());
+  // Remove loading state if present
+  if (grid.querySelector('.loading')) {
+    grid.innerHTML = '';
   }
   
+  applyTranslations();
   renderCategories();
   renderGrid();
-  applyTranslations();
 }
 
-// Run on load
+// Start the app
 document.addEventListener('DOMContentLoaded', init);
