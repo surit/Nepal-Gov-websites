@@ -1,44 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Nepal Government Websites Directory</title>
-  <link rel="stylesheet" href="css/styles.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free, ad-free directory of all official Nepal government websites (.gov.np). One page. Every government website.">
+  <title data-i18n="pageTitle">Nepal Government Websites Directory</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🇳🇵</text></svg>">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
   <div class="wrap">
     <header>
-      <h1>🇳🇵 Nepal Government Websites</h1>
-      <p class="subtitle">Official .gov.np portals</p>
+      <div class="header-top">
+        <h1 data-i18n="title">🇳 Nepal Government Websites</h1>
+        <button id="lang-toggle" class="lang-toggle" aria-label="Toggle language">नेपाली</button>
+      </div>
+      <p class="subtitle" data-i18n="subtitle">Official .gov.np portals</p>
     </header>
 
-    <!-- Category Navigation -->
-    <nav id="category-nav" class="category-nav" aria-label="Categories"></nav>
+    <nav id="category-nav" class="category-nav" aria-label="Categories">
+      <!-- Categories rendered by JS -->
+    </nav>
 
-    <!-- Search -->
-    <input type="text" id="search" placeholder="Search sites..." aria-label="Search websites" />
+    <div class="search-container">
+      <input type="search" id="search" data-i18n-placeholder="searchPlaceholder" placeholder="Search sites, ministries, services..." aria-label="Search government websites">
+      <span class="search-icon">🔍</span>
+    </div>
 
-    <!-- Site Grid -->
-    <main id="grid" class="grid" aria-live="polite"></main>
+    <div class="stats-bar">
+      <span id="site-count" class="stat">📈 <strong>0</strong> sites</span>
+      <span class="stat">🌏 One Country</span>
+      <span class="stat">🕐 Updated <time id="last-updated">-</time></span>
+    </div>
 
-    <!-- Community Suggestions -->
+    <main id="grid" class="grid" aria-live="polite" aria-busy="true">
+      <div class="loading">
+        <div class="loading-spinner"></div>
+        <p data-i18n="loading">Loading government sites...</p>
+      </div>
+    </main>
+
     <section class="suggest-section">
-      <h2>💡 Missing a website?</h2>
-      <p>Help us improve this directory. Suggest a .gov.np site:</p>
-      <!-- Replace # with your Google Form link later -->
-      <a href="https://forms.gle/stcFLz9tLyjjsvNr9" target="_blank" rel="noopener" class="suggest-btn" id="suggest-link">
+      <h2 data-i18n="suggestTitle">💡 Missing a website?</h2>
+      <p data-i18n="suggestDesc">Help us improve this directory. Suggest a .gov.np site:</p>
+      <a href="https://forms.gle/stcFLz9tLyjjsvNr9" class="suggest-btn" target="_blank" rel="noopener noreferrer" data-i18n="suggestBtn">
         Submit a Website →
       </a>
-      <small class="note">We verify all submissions before publishing.</small>
+      <small class="note" data-i18n="verifyNote">We verify all submissions before publishing.</small>
     </section>
 
     <footer class="disc">
-      Unofficial directory • Links go directly to official .gov.np domains
-      <small>📈 75+ sites • 7 provinces • Updated Apr 2026 • Built by volunteers</small>
+      <p>
+        <span data-i18n="footerUnofficial">Unofficial directory</span> • 
+        <span data-i18n="footerDirect">Links go directly to official .gov.np domains</span><br>
+        <span data-i18n="footerBuilt">Built by volunteers</span> • 
+        <a href="https://github.com/surit/Nepal-Gov-websites" target="_blank" rel="noopener" style="color: var(--primary)">GitHub</a>
+      </p>
     </footer>
   </div>
 
+  <script src="js/translations.js"></script>
   <script src="js/script.js"></script>
 </body>
 </html>

@@ -1,5 +1,8 @@
-// Nepal Government Websites Directory - Complete Site List (Deduplicated)
-const sites = [
+// js/script.js - V2 Complete (Inline Data Version)
+// No external JSON fetch - works everywhere including file://
+
+// ========== SANITIZED DATA (trimmed, no trailing spaces) ==========
+const sitesData = [
   // ========== Constitutional Bodies ==========
   { name: "Office of the President", url: "https://presidentofnepal.gov.np", desc: "Official office of the President of Nepal.", cat: "Constitutional", status: "active" },
   { name: "Office of the Vice President", url: "https://vp.gov.np", desc: "Official office of the Vice President of Nepal.", cat: "Constitutional", status: "active" },
@@ -108,13 +111,6 @@ const sites = [
   { name: "Lumbini Province", url: "https://lumbini.gov.np", desc: "Provincial government services for Lumbini (Province 5).", cat: "Provincial Govt", status: "active" },
   { name: "Karnali Province", url: "https://karnali.gov.np", desc: "Provincial government services for Karnali (Province 6).", cat: "Provincial Govt", status: "active" },
   { name: "Sudurpaschim Province", url: "https://sudurpaschim.gov.np", desc: "Provincial government services for Sudurpaschim (Province 7).", cat: "Provincial Govt", status: "active" },
-  { name: "Koshi Province - Chief Minister Office", url: "https://p1.gov.np", desc: "Office of Chief Minister and Council of Ministers, Koshi Province.", cat: "Provincial Govt", status: "active" },
-  { name: "Madhesh Province - Chief Minister Office", url: "https://p2.gov.np", desc: "Office of Chief Minister and Council of Ministers, Madhesh Province.", cat: "Provincial Govt", status: "active" },
-  { name: "Bagmati Province - Chief Minister Office", url: "https://bagmati.gov.np/cm-office", desc: "Office of Chief Minister and Council of Ministers, Bagmati Province.", cat: "Provincial Govt", status: "active" },
-  { name: "Gandaki Province - Chief Minister Office", url: "https://gandaki.gov.np/cm-office", desc: "Office of Chief Minister and Council of Ministers, Gandaki Province.", cat: "Provincial Govt", status: "active" },
-  { name: "Lumbini Province - Chief Minister Office", url: "https://lumbini.gov.np/cm-office", desc: "Office of Chief Minister and Council of Ministers, Lumbini Province.", cat: "Provincial Govt", status: "active" },
-  { name: "Karnali Province - Chief Minister Office", url: "https://karnali.gov.np/cm-office", desc: "Office of Chief Minister and Council of Ministers, Karnali Province.", cat: "Provincial Govt", status: "active" },
-  { name: "Sudurpaschim Province - Chief Minister Office", url: "https://sudurpaschim.gov.np/cm-office", desc: "Office of Chief Minister and Council of Ministers, Sudurpaschim Province.", cat: "Provincial Govt", status: "active" },
 
   // ========== Local Governments (Metropolitan & Sub-Metropolitan Cities) ==========
   { name: "Kathmandu Metropolitan City", url: "https://kathmandu.gov.np", desc: "Local services, permits, notices.", cat: "Local Govt", status: "active" },
@@ -192,30 +188,49 @@ const sites = [
   { name: "Policy Research Institute", url: "https://pri.gov.np", desc: "Policy research, analysis & evidence-based recommendations.", cat: "Institute", status: "active" },
 ];
 
-// ========== DOM Elements & Logic ==========
+// ========== State ==========
+let sites = sitesData;
+let currentCategory = 'All';
+let searchQuery = '';
+let currentLang = localStorage.getItem('lang') || 'en';
+const lastUpdated = '2026-04-20';
+
+// ========== DOM Elements ==========
 const grid = document.getElementById('grid');
 const searchInput = document.getElementById('search');
 const categoryNav = document.getElementById('category-nav');
+const siteCountEl = document.getElementById('site-count');
+const lastUpdatedEl = document.getElementById('last-updated');
+const langToggle = document.getElementById('lang-toggle');
 
-let currentCategory = 'All';
-let searchQuery = '';
-const categories = ['All', ...new Set(sites.map(s => s.cat))];
+// ========== Helpers ==========
+const escapeHtml = (str) => {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+};
 
+const formatDate = (dateStr) => {
+  if (!dateStr) return '-';
+  const date = new Date(dateStr);
+  const options = { year: 'numeric', month: 'short', day: 'numeric' };
+  return date.toLocaleDateString(currentLang === 'ne' ? 'ne-NP' : 'en-US', options);
+};
+
+const getTranslation = (key) => {
+  return translations?.[currentLang]?.[key] || translations?.en?.[key] || key;
+};
+
+// ========== Render Functions ==========
 function renderCategories() {
-  categoryNav.innerHTML = categories.map(cat => 
-    `<button class="cat-btn ${cat === currentCategory ? 'active' : ''}" 
-            data-cat="${cat}" 
+  const categories = ['All', ...new Set(sites.map(s => s.cat))];
+  categoryNav.innerHTML = categories.map(cat => `
+    <button class="cat-btn ${cat === currentCategory ? 'active' : ''}" 
+            data-cat="${escapeHtml(cat)}" 
             aria-pressed="${cat === currentCategory}">
-      ${cat}
-    </button>`
-  ).join('');
-  categoryNav.querySelectorAll('.cat-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      currentCategory = e.currentTarget.dataset.cat;
-      renderCategories();
-      renderGrid();
-    });
-  });
+      ${escapeHtml(cat)}
+    </button>
+  `).join('');
 }
 
 function renderGrid() {
@@ -225,33 +240,125 @@ function renderGrid() {
     const matchesSearch = !q || 
       s.name.toLowerCase().includes(q) || 
       s.url.toLowerCase().includes(q) || 
-      s.desc.toLowerCase().includes(q) ||
+      s.desc.toLowerCase().includes(q) || 
       s.cat.toLowerCase().includes(q);
     return matchesCat && matchesSearch;
   });
 
+  if (siteCountEl) {
+    siteCountEl.innerHTML = `📈 <strong>${filtered.length}</strong> sites`;
+  }
+
   if (filtered.length === 0) {
-    grid.innerHTML = `<p class="empty" style="grid-column:1/-1;text-align:center;color:var(--sub)">No sites match your filters.</p>`;
+    grid.innerHTML = `<p class="empty">${getTranslation('noResults') || 'No sites match your filters.'}</p>`;
     return;
   }
 
-  grid.innerHTML = filtered.map(s => `
-    <article class="card">
-      <h3>${s.name}</h3>
-      <a href="${s.url}" target="_blank" rel="noopener noreferrer">
-        ${s.url.replace(/^https?:\/\//, '')}
-      </a>
-      <p>${s.desc}</p>
-      <span class="tag">${s.cat}</span>
-      <div class="status ${s.status}">● ${s.status === 'active' ? 'Online' : 'Offline'}</div>
-    </article>
-  `).join('');
+  grid.innerHTML = filtered.map(s => {
+    const displayUrl = s.url.replace(/^https?:\/\//, '');
+    const statusText = s.status === 'active' ? (getTranslation('online') || 'Online') : (getTranslation('offline') || 'Offline');
+    
+    return `
+      <article class="card">
+        <h3>${escapeHtml(s.name)}</h3>
+        <a href="${escapeHtml(s.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(displayUrl)}</a>
+        <p>${escapeHtml(s.desc)}</p>
+        <div class="card-footer">
+          <span class="tag">${escapeHtml(s.cat)}</span>
+          <div class="status ${s.status}">${statusText}</div>
+        </div>
+        <button class="copy-btn" data-url="${escapeHtml(s.url)}" aria-label="${getTranslation('copyUrl') || 'Copy URL'}">
+          ${getTranslation('copyUrl') || '📋 Copy URL'}
+        </button>
+      </article>
+    `;
+  }).join('');
 }
 
-searchInput.addEventListener('input', (e) => {
+function applyTranslations() {
+  document.documentElement.lang = currentLang;
+  
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    const translation = getTranslation(key);
+    if (translation) el.textContent = translation;
+  });
+  
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.dataset.i18nPlaceholder;
+    const translation = getTranslation(key);
+    if (translation) el.placeholder = translation;
+  });
+  
+  if (langToggle) {
+    langToggle.textContent = getTranslation('langToggle');
+  }
+  
+  if (lastUpdatedEl) {
+    lastUpdatedEl.textContent = formatDate(lastUpdated);
+  }
+  
+  renderGrid();
+}
+
+// ========== Event Handlers ==========
+function handleCategoryClick(e) {
+  const btn = e.target.closest('.cat-btn');
+  if (!btn) return;
+  currentCategory = btn.dataset.cat;
+  renderCategories();
+  renderGrid();
+}
+
+function handleSearchInput(e) {
   searchQuery = e.target.value.trim();
   renderGrid();
-});
+}
 
-renderCategories();
-renderGrid();
+async function handleCopyUrl(e) {
+  const btn = e.target.closest('.copy-btn');
+  if (!btn) return;
+  
+  const url = btn.dataset.url;
+  try {
+    await navigator.clipboard.writeText(url);
+    const original = btn.innerHTML;
+    btn.innerHTML = getTranslation('copied') || '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.innerHTML = original;
+      btn.classList.remove('copied');
+    }, 2000);
+  } catch (err) {
+    console.error('Copy failed:', err);
+  }
+}
+
+function handleLangToggle() {
+  currentLang = currentLang === 'en' ? 'ne' : 'en';
+  localStorage.setItem('lang', currentLang);
+  applyTranslations();
+}
+
+// ========== Event Listeners ==========
+categoryNav.addEventListener('click', handleCategoryClick);
+searchInput.addEventListener('input', handleSearchInput);
+grid.addEventListener('click', handleCopyUrl);
+if (langToggle) {
+  langToggle.addEventListener('click', handleLangToggle);
+}
+
+// ========== Init ==========
+function init() {
+  // Remove loading state if present
+  if (grid.querySelector('.loading')) {
+    grid.innerHTML = '';
+  }
+  
+  applyTranslations();
+  renderCategories();
+  renderGrid();
+}
+
+// Start the app
+document.addEventListener('DOMContentLoaded', init);
