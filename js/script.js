@@ -5,7 +5,7 @@
 const sitesData = [
   // ========== Constitutional Bodies ==========
   { name: "Office of the President", url: "https://presidentofnepal.gov.np", desc: "Official office of the President of Nepal.", cat: "Constitutional", status: "active" },
-  { name: "Office of the Vice President", url: "https://vp.gov.np", desc: "Official office of the Vice President of Nepal.", cat: "Constitutional", status: "active" },
+  //{ name: "Office of the Vice President", url: "https://vp.gov.np", desc: "Official office of the Vice President of Nepal.", cat: "Constitutional", status: "active" },
   { name: "Supreme Court of Nepal", url: "https://supremecourt.gov.np", desc: "Highest court of Nepal with appellate jurisdiction.", cat: "Constitutional", status: "active" },
   { name: "Public Service Commission Nepal", url: "https://psc.gov.np", desc: "Recruitment for civil service & government positions.", cat: "Constitutional", status: "active" },
   { name: "Election Commission Nepal", url: "https://election.gov.np", desc: "Conducting free & fair elections at all levels.", cat: "Constitutional", status: "active" },
