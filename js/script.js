@@ -203,32 +203,31 @@ function generateTags(site) {
   // Keyword-based tagging from name/desc
   const text = (site.name + ' ' + site.desc + ' ' + site.cat).toLowerCase();
   
-  // Expanded responsibility-based tags from desc/tasks
+  // Precise responsibility-based tags from desc only (no cat names)
   if (text.includes('passport') || text.includes('पासपोर्ट')) tags.add('Passport');
-  if (text.includes('citizen') || text.includes('नागरिकता') || text.includes('birth') || text.includes('death')) tags.add('Citizenship');
-  if (text.includes('visa') || text.includes('भिसा') || text.includes('immigration') || text.includes('foreign employment')) tags.add('Visa');
+  if (text.includes('national id') || text.includes('आइडि') || text.includes('registration') || text.includes('birth') || text.includes('death')) tags.add('Civil Registry');
+  if (text.includes('visa') || text.includes('भिसा') || text.includes('immigration')) tags.add('Visa');
   if (text.includes('tax') || text.includes('कर') || text.includes('revenue') || text.includes('ird')) tags.add('Tax');
-  if (text.includes('police') || text.includes('प्रहरी') || text.includes('law enforcement')) tags.add('Police');
-  if (text.includes('customs') || text.includes('कस्टम्स') || text.includes('import') || text.includes('export')) tags.add('Customs');
-  if (text.includes('court') || text.includes('अदालत') || text.includes('supreme') || text.includes('law')) tags.add('Court');
-  if (text.includes('health') || text.includes('hospital') || text.includes('स्वास्थ्य') || text.includes('insurance')) tags.add('Health');
+  if (text.includes('police') || text.includes('प्रहरी')) tags.add('Police');
+  if (text.includes('customs') || text.includes('कस्टम्स')) tags.add('Customs');
+  if (text.includes('court') || text.includes('अदालत') || text.includes('supreme')) tags.add('Court');
+  if (text.includes('health') || text.includes('hospital') || text.includes('स्वास्थ्य')) tags.add('Health');
   if (text.includes('education') || text.includes('शिक्षा') || text.includes('teacher') || text.includes('exam')) tags.add('Education');
   if (text.includes('energy') || text.includes('विद्युत') || text.includes('electricity') || text.includes('hydropower')) tags.add('Energy');
-  if (text.includes('municip') || text.includes('nagar') || text.includes('mun.gov.np') || text.includes('permit') || text.includes('license')) tags.add('Municipality');
-  if (text.includes('district') || text.includes('जिल्ला') || text.includes('administra')) tags.add('District');
-  if (text.includes('road') || text.includes('transport') || text.includes('सडक') || text.includes('vehicle')) tags.add('Transport');
-  if (text.includes('land') || text.includes('जग्गा') || text.includes('survey') || text.includes('record')) tags.add('Land');
-  if (text.includes('election') || text.includes('निर्वाचन') || text.includes('vote')) tags.add('Election');
-  if (text.includes('id') || text.includes('आइडि') || text.includes('national id')) tags.add('National ID');
+  if (text.includes('road') || text.includes('transport') || text.includes('vehicle')) tags.add('Transport');
+  if (text.includes('land') || text.includes('जग्गा') || text.includes('survey') || text.includes('archive')) tags.add('Land Records');
+  if (text.includes('election') || text.includes('निर्वाचन')) tags.add('Election');
   if (text.includes('agricultur') || text.includes('कृषि') || text.includes('livestock') || text.includes('farmer')) tags.add('Agriculture');
-  if (text.includes('tourism') || text.includes('पर्यटन') || text.includes('hotel')) tags.add('Tourism');
-  if (text.includes('finance') || text.includes('मुद्रा') || text.includes('bank') || text.includes('budget')) tags.add('Finance');
-  if (text.includes('foreign') || text.includes('विदेश') || text.includes('diplomatic')) tags.add('Foreign Affairs');
+  if (text.includes('tourism') || text.includes('पर्यटन')) tags.add('Tourism');
+  if (text.includes('bank') || text.includes('budget') || text.includes('finance')) tags.add('Finance');
   if (text.includes('water') || text.includes('जल') || text.includes('irrigation') || text.includes('sanitation')) tags.add('Water');
   if (text.includes('recruit') || text.includes('employment') || text.includes('service commission')) tags.add('Jobs');
   if (text.includes('audit') || text.includes('account')) tags.add('Audit');
-  if (text.includes('statistics') || text.includes('census')) tags.add('Statistics');
+  if (text.includes('statistics') || text.includes('census') || text.includes('data')) tags.add('Statistics');
   if (text.includes('procurement') || text.includes('tender')) tags.add('Procurement');
+  // Filter out category names to avoid repeats
+  const categoryNames = ['Local Govt', 'Ministry', 'Department', 'Authority', 'Constitutional'];
+  tags = new Set([...tags].filter(tag => !categoryNames.includes(tag)));
   
   // Category-based fallback
   if (site.cat === 'Local Govt') tags.add('Local Govt');
@@ -270,9 +269,10 @@ function renderCategories() {
   const categories = ['All', ...Array.from(new Set(sites.map(s => s.cat)))].sort();
   const counts = {};
   sites.forEach(s => counts[s.cat] = (counts[s.cat] || 0) + 1);
+  const totalCount = sites.length;
   
   categoryNav.innerHTML = categories.map(cat => {
-    const count = counts[cat] || 0;
+    const count = cat === 'All' ? totalCount : (counts[cat] || 0);
     return `
       <button class="cat-btn ${cat === currentCategory ? 'active' : ''}" 
               data-cat="${escapeHtml(cat)}" 
