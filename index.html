@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,13 +13,20 @@
     <header>
       <div class="header-top">
         <h1 data-i18n="title">🇳 Nepal Government Websites</h1>
-        <button id="lang-toggle" class="lang-toggle" aria-label="Toggle language">नेपाली</button>
+        <div class="toggles">
+          <button id="lang-toggle" class="lang-toggle" aria-label="Toggle language">नेपाली</button>
+          <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
+        </div>
       </div>
       <p class="subtitle" data-i18n="subtitle">Official .gov.np portals</p>
     </header>
 
     <nav id="category-nav" class="category-nav" aria-label="Categories">
       <!-- Categories rendered by JS -->
+    </nav>
+
+    <nav id="tag-nav" class="tag-nav" aria-label="Tags">
+      <!-- Tags rendered by JS -->
     </nav>
 
     <div class="search-container">

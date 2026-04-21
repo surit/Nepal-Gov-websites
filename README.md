@@ -21,8 +21,10 @@ Free, ad-free directory of **all official Nepal government websites** (.gov.np d
 
 ## 🌐 Features
 
-- ✅ Search across all sites & ministries
-- ✅ Category filters (Ministries, Provinces, Districts, etc.)
+- ✅ **Dual Filtering**: Category → AI Tags (Passport, Police, Health, Tax, etc.) → Search
+- ✅ **Category Metrics**: Count badges + hover tooltips (e.g. "Ministry (18)")
+- ✅ **Dark/Light Mode**: Auto-detect + toggle (☀️/🌙) with localStorage
+- ✅ Search across all sites, tags, ministries
 - ✅ Nepali/English language toggle
 - ✅ Stats: Total sites, last updated
 - ✅ Mobile-responsive
@@ -52,13 +54,16 @@ Free, ad-free directory of **all official Nepal government websites** (.gov.np d
    {
      name: "Ministry Name",
      url: "https://ministry.gov.np",
-     category: "ministry",
-     province: null,
-     district: null
+     cat: "Ministry",
+     desc: "Description here",
+     status: "active"
+     // Tags auto-generated from name/desc
    }
    ```
 
 2. Update `lastUpdated` date in script.js.
+
+**New:** Tags auto-generated via keywords (Passport=Passport sites, Health=Health/Hospital, etc.)
 
 3. Test locally, then deploy.
 

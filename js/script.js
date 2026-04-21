@@ -189,11 +189,49 @@ const sitesData = [
 ];
 
 // ========== State ==========
-let sites = sitesData;
+let sites = sitesData.map(generateTags); // Auto-generate tags
 let currentCategory = 'All';
+let currentTag = 'All';
 let searchQuery = '';
 let currentLang = localStorage.getItem('lang') || 'en';
 const lastUpdated = '2026-04-20';
+
+// ========== Tag Generation ==========
+function generateTags(site) {
+  const tags = new Set();
+  
+  // Keyword-based tagging from name/desc
+  const text = (site.name + ' ' + site.desc + ' ' + site.cat).toLowerCase();
+  
+  // Common tags
+  if (text.includes('passport') || text.includes('पासपोर्ट')) tags.add('Passport');
+  if (text.includes('citizen') || text.includes('नागरिकता')) tags.add('Citizenship');
+  if (text.includes('visa') || text.includes('भिसा')) tags.add('Visa');
+  if (text.includes('tax') || text.includes('कर') || text.includes('revenue')) tags.add('Tax');
+  if (text.includes('police') || text.includes('प्रहरी')) tags.add('Police');
+  if (text.includes('customs') || text.includes('कस्टम्स')) tags.add('Customs');
+  if (text.includes('court') || text.includes('अदालत') || text.includes('supreme')) tags.add('Court');
+  if (text.includes('health') || text.includes('hospital') || text.includes('स्वास्थ्य')) tags.add('Health');
+  if (text.includes('education') || text.includes('शिक्षा')) tags.add('Education');
+  if (text.includes('energy') || text.includes('विद्युत') || text.includes('electricity')) tags.add('Energy');
+  if (text.includes('municip') || text.includes('nagar') || text.includes('mun.gov.np')) tags.add('Municipality');
+  if (text.includes('district') || text.includes('जिल्ला')) tags.add('District');
+  if (text.includes('road') || text.includes('transport') || text.includes('सडक')) tags.add('Transport');
+  if (text.includes('land') || text.includes('जग्गा')) tags.add('Land');
+  if (text.includes('election') || text.includes('निर्वाचन')) tags.add('Election');
+  if (text.includes('id') || text.includes('आइडि')) tags.add('National ID');
+  if (text.includes('agricultur') || text.includes('कृषि')) tags.add('Agriculture');
+  if (text.includes('tourism') || text.includes('पर्यटन')) tags.add('Tourism');
+  if (text.includes('finance') || text.includes('मुद्रा')) tags.add('Finance');
+  if (text.includes('foreign') || text.includes('विदेश')) tags.add('Foreign Affairs');
+  if (text.includes('water') || text.includes('जल')) tags.add('Water');
+  
+  // Category-based fallback
+  if (site.cat === 'Local Govt') tags.add('Local Govt');
+  
+  return Object.assign(site, { tags: Array.from(tags) });
+}
+
 
 // ========== DOM Elements ==========
 const grid = document.getElementById('grid');
@@ -202,6 +240,8 @@ const categoryNav = document.getElementById('category-nav');
 const siteCountEl = document.getElementById('site-count');
 const lastUpdatedEl = document.getElementById('last-updated');
 const langToggle = document.getElementById('lang-toggle');
+const themeToggle = document.getElementById('theme-toggle');
+const tagNav = document.getElementById('tag-nav');
 
 // ========== Helpers ==========
 const escapeHtml = (str) => {
@@ -223,26 +263,55 @@ const getTranslation = (key) => {
 
 // ========== Render Functions ==========
 function renderCategories() {
-  const categories = ['All', ...new Set(sites.map(s => s.cat))];
-  categoryNav.innerHTML = categories.map(cat => `
-    <button class="cat-btn ${cat === currentCategory ? 'active' : ''}" 
-            data-cat="${escapeHtml(cat)}" 
-            aria-pressed="${cat === currentCategory}">
-      ${escapeHtml(cat)}
-    </button>
-  `).join('');
+  const categories = ['All', ...Array.from(new Set(sites.map(s => s.cat)))].sort();
+  const counts = {};
+  sites.forEach(s => counts[s.cat] = (counts[s.cat] || 0) + 1);
+  
+  categoryNav.innerHTML = categories.map(cat => {
+    const count = counts[cat] || 0;
+    return `
+      <button class="cat-btn ${cat === currentCategory ? 'active' : ''}" 
+              data-cat="${escapeHtml(cat)}" 
+              aria-pressed="${cat === currentCategory}"
+              title="${cat} (${count} sites)"
+              aria-label="${cat} - ${count} sites">
+        ${escapeHtml(cat)} <span class="count">(${count})</span>
+      </button>
+    `;
+  }).join('');
 }
+
+function renderTags() {
+  const allTags = ['All', ...Array.from(new Set(sites.flatMap(s => s.tags))).sort()];
+  const counts = {};
+  sites.forEach(s => s.tags.forEach(tag => counts[tag] = (counts[tag] || 0) + 1));
+  
+  tagNav.innerHTML = allTags.map(tag => {
+    const count = counts[tag] || 0;
+    return `
+      <button class="tag-btn ${tag === currentTag ? 'active' : ''}" 
+              data-tag="${escapeHtml(tag)}" 
+              title="${tag} (${count} sites)"
+              aria-label="${tag} - ${count} sites">
+        ${escapeHtml(tag)} <span class="count">(${count})</span>
+      </button>
+    `;
+  }).join('');
+}
+
 
 function renderGrid() {
   const q = searchQuery.toLowerCase();
   const filtered = sites.filter(s => {
     const matchesCat = currentCategory === 'All' || s.cat === currentCategory;
+    const matchesTag = currentTag === 'All' || s.tags.includes(currentTag);
     const matchesSearch = !q || 
       s.name.toLowerCase().includes(q) || 
       s.url.toLowerCase().includes(q) || 
       s.desc.toLowerCase().includes(q) || 
-      s.cat.toLowerCase().includes(q);
-    return matchesCat && matchesSearch;
+      s.cat.toLowerCase().includes(q) ||
+      s.tags.some(t => t.toLowerCase().includes(q));
+    return matchesCat && matchesTag && matchesSearch;
   });
 
   if (siteCountEl) {
@@ -307,6 +376,15 @@ function handleCategoryClick(e) {
   if (!btn) return;
   currentCategory = btn.dataset.cat;
   renderCategories();
+  renderTags();
+  renderGrid();
+}
+
+function handleTagClick(e) {
+  const btn = e.target.closest('.tag-btn');
+  if (!btn) return;
+  currentTag = btn.dataset.tag;
+  renderTags();
   renderGrid();
 }
 
@@ -342,10 +420,14 @@ function handleLangToggle() {
 
 // ========== Event Listeners ==========
 categoryNav.addEventListener('click', handleCategoryClick);
+tagNav.addEventListener('click', handleTagClick);
 searchInput.addEventListener('input', handleSearchInput);
 grid.addEventListener('click', handleCopyUrl);
 if (langToggle) {
   langToggle.addEventListener('click', handleLangToggle);
+}
+if (themeToggle) {
+  themeToggle.addEventListener('click', handleThemeToggle);
 }
 
 // ========== Init ==========
@@ -355,10 +437,25 @@ function init() {
     grid.innerHTML = '';
   }
   
+  // Theme init
+  const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  
   applyTranslations();
   renderCategories();
+  renderTags();
   renderGrid();
 }
+
+function handleThemeToggle() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  themeToggle.textContent = next === 'dark' ? '☀️' : '🌙';
+}
+
+if (themeToggle) themeToggle.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
 
 // Start the app
 document.addEventListener('DOMContentLoaded', init);
