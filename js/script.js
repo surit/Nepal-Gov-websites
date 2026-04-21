@@ -226,8 +226,9 @@ function generateTags(site) {
   if (text.includes('statistics') || text.includes('census') || text.includes('data')) tags.add('Statistics');
   if (text.includes('procurement') || text.includes('tender')) tags.add('Procurement');
   // Filter out category names to avoid repeats
-  const categoryNames = ['Local Govt', 'Ministry', 'Department', 'Authority', 'Constitutional'];
-  tags = new Set([...tags].filter(tag => !categoryNames.includes(tag)));
+  const categoryNames = ['Local Govt', 'Ministry', 'Department', 'Authority', 'Constitutional', 'Board', 'Commission', 'Program', 'Hospital', 'Trust', 'Institute', 'Office', 'Council'];
+  const filteredTags = new Set([...tags].filter(tag => !categoryNames.includes(tag)));
+  tags = filteredTags;
   
   // Category-based fallback
   if (site.cat === 'Local Govt') tags.add('Local Govt');
