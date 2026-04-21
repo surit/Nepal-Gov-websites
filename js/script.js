@@ -194,11 +194,11 @@ let currentCategory = 'All';
 let currentTag = 'All';
 let searchQuery = '';
 let currentLang = localStorage.getItem('lang') || 'en';
-const lastUpdated = '2026-04-20';
+const lastUpdated = '2026-04-21';
 
 // ========== Tag Generation ==========
 function generateTags(site) {
-  const tags = new Set();
+  let tags = new Set();
   
   // Keyword-based tagging from name/desc
   const text = (site.name + ' ' + site.desc + ' ' + site.cat).toLowerCase();
@@ -225,15 +225,88 @@ function generateTags(site) {
   if (text.includes('audit') || text.includes('account')) tags.add('Audit');
   if (text.includes('statistics') || text.includes('census') || text.includes('data')) tags.add('Statistics');
   if (text.includes('procurement') || text.includes('tender')) tags.add('Procurement');
+  
   // Filter out category names to avoid repeats
   const categoryNames = ['Local Govt', 'Ministry', 'Department', 'Authority', 'Constitutional', 'Board', 'Commission', 'Program', 'Hospital', 'Trust', 'Institute', 'Office', 'Council'];
-  const filteredTags = new Set([...tags].filter(tag => !categoryNames.includes(tag)));
-  tags = filteredTags;
+  categoryNames.forEach(name => tags.delete(name));
   
   // Category-based fallback
   if (site.cat === 'Local Govt') tags.add('Local Govt');
   
-  return Object.assign(site, { tags: Array.from(tags) });
+  const siteWithTags = Object.assign(site, { tags: Array.from(tags) });
+  return enrichDetails(siteWithTags);
+}
+
+// ========== Professional Tooltip Enrichment ==========
+function enrichDetails(site) {
+  const details = {
+    services: [],
+    audience: "General Public",
+    interaction: "Medium - Informational & Support"
+  };
+
+  const text = (site.name + ' ' + site.desc).toLowerCase();
+  
+  // Logic to determine services based on tags/content
+  if (site.tags.includes('Passport')) {
+    details.services.push("E-passport applications", "Renewal services", "Passport status tracking");
+    details.interaction = "High - Direct service delivery";
+  }
+  if (site.tags.includes('Civil Registry')) {
+    details.services.push("National ID registration", "Birth/Death certification", "Vital records management");
+    details.interaction = "High - Critical citizen documentation";
+  }
+  if (site.tags.includes('Visa') || site.tags.includes('Immigration')) {
+    details.services.push("Visa applications & extensions", "Entry/Exit permits", "Travel advisories");
+    details.audience = "International Travelers & Citizens";
+  }
+  if (site.tags.includes('Tax') || site.tags.includes('Customs')) {
+    details.services.push("Electronic tax filing (e-Filing)", "Customs clearance services", "Revenue payment portal");
+    details.audience = "Citizens, Businesses & Importers";
+    details.interaction = "High - Financial & trade compliance";
+  }
+  if (site.tags.includes('Transport')) {
+    details.services.push("Driving license applications", "Vehicle registration", "Transport permit management");
+    details.interaction = "High - Mobility & licensing services";
+  }
+  if (site.tags.includes('Health')) {
+    details.services.push("Hospital & clinic locator", "Health service standards", "Epidemic alerts & data");
+    details.interaction = "High - Public wellness support";
+  }
+  if (site.tags.includes('Education')) {
+    details.services.push("Curriculum assessment", "Teacher licensing", "Results and certification");
+    details.audience = "Students, Teachers & Parents";
+  }
+  if (site.tags.includes('Jobs')) {
+    details.services.push("Civil service exams", "Job recruitment notices", "Application portal");
+    details.audience = "Job Seekers";
+    details.interaction = "High - Career & employment support";
+  }
+  if (site.cat === 'Local Govt' || site.cat === 'Provincial Govt') {
+    details.services.push("Local infrastructure development", "Permits and recommendations", "Public grievances handling");
+    details.audience = "Local Residents";
+    details.interaction = "High - Direct local governance";
+  }
+  if (site.cat === 'Ministry') {
+    details.services.push("Policy formulation", "National sector oversight", "Legislative drafting support");
+    details.audience = "Citizens & Institutional Bodies";
+    details.interaction = "Medium - Strategic & legal oversight";
+  }
+  if (site.tags.includes('Police')) {
+    details.services.push("Online first information reports", "Emergency response coordination", "Character verification");
+    details.interaction = "High - Security & protection services";
+  }
+  if (site.tags.includes('Finance') || site.tags.includes('Bank') || site.tags.includes('Authority')) {
+    details.services.push("Regulatory monitoring", "Public data and archives", "Standards & compliance enforcement");
+    details.audience = "Professionals, Businesses & Researchers";
+  }
+
+  // Fallback if empty
+  if (details.services.length === 0) {
+    details.services.push("Official announcements", "Departmental guidance", "Information dissemination");
+  }
+
+  return Object.assign(site, { details });
 }
 
 
@@ -287,7 +360,14 @@ function renderCategories() {
 }
 
 function renderTags() {
-  const uniqueTags = Array.from(new Set(sites.flatMap(s => s.tags))).sort();
+  const filteredForCat = currentCategory === 'All' ? sites : sites.filter(s => s.cat === currentCategory);
+  const uniqueTags = Array.from(new Set(filteredForCat.flatMap(s => s.tags))).sort();
+  
+  // If current tag is no longer available in this category, reset it
+  if (currentTag !== 'All' && !uniqueTags.includes(currentTag)) {
+    currentTag = 'All';
+  }
+
   tagNav.innerHTML = uniqueTags.map(tag => {
     return `
       <button class="tag-btn ${tag === currentTag ? 'active' : ''}" 
@@ -314,7 +394,7 @@ function renderGrid() {
   });
 
   if (siteCountEl) {
-    siteCountEl.innerHTML = `📈 <strong>${filtered.length}</strong> sites`;
+    siteCountEl.innerHTML = `📈 <strong>${filtered.length}</strong> ${getTranslation('sitesCount') || 'sites'}`;
   }
 
   if (filtered.length === 0) {
@@ -328,6 +408,29 @@ function renderGrid() {
     
     return `
       <article class="card">
+        <div class="details-trigger" aria-label="More Info">i</div>
+        <div class="tooltip">
+          <div class="tooltip-header">
+            <span>🏛️</span> ${getTranslation('detailsTitle') || 'Organization Insights'}
+          </div>
+          <div class="tooltip-section">
+            <span class="tooltip-label">${getTranslation('labelServices') || 'Key Services'}</span>
+            <span class="tooltip-content">
+              <ul>
+                ${s.details.services.map(serve => `<li>${serve}</li>`).join('')}
+              </ul>
+            </span>
+          </div>
+          <div class="tooltip-section">
+            <span class="tooltip-label">${getTranslation('labelAudience') || 'Primary Audience'}</span>
+            <span class="tooltip-content">${s.details.audience}</span>
+          </div>
+          <div class="tooltip-section">
+            <span class="tooltip-label">${getTranslation('labelInteraction') || 'Public Interaction'}</span>
+            <span class="tooltip-content">${s.details.interaction}</span>
+          </div>
+        </div>
+
         <h3>${escapeHtml(s.name)}</h3>
         <a href="${escapeHtml(s.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(displayUrl)}</a>
         <p>${escapeHtml(s.desc)}</p>

@@ -19,18 +19,26 @@ Free, ad-free directory of **all official Nepal government websites** (.gov.np d
    ```
 2. Site loads instantly - no build step needed.
 
-## 🌐 Features
+## 🌐 Features ✨
 
-- ✅ **Dual Filtering**: Category → AI Tags (Passport, Police, Health, Tax, etc.) → Search
-- ✅ **Category Metrics**: Count badges + hover tooltips (e.g. "Ministry (18)")
-- ✅ **Dark/Light Mode**: Auto-detect + toggle (☀️/🌙) with localStorage
-- ✅ Search across all sites, tags, ministries
-- ✅ Nepali/English language toggle
-- ✅ Stats: Total sites, last updated
-- ✅ Mobile-responsive
-- ✅ Keyboard accessible
-- ✅ No ads/trackers/cookies
-- ✅ Direct links to official .gov.np domains
+| Feature | Description |
+|---------|-------------|
+| **🔄 Dual Filtering** | Category → **AI Tags** (18+ auto-generated: Passport/Visa/Tax/Police/Health/Land/etc.) → Search |
+| **📊 Category Metrics** | Live counts + hover tooltips (e.g. "Ministry (25)") |
+| **🌙 Dark/Light Mode** | Auto-detect (prefers-color-scheme) + manual toggle + localStorage persistence |
+| **🔍 Smart Search** | Matches sites, names, desc, categories, **tags** |
+| **🇳🇵 Bilingual** | Full English/नेपाली toggle with 50+ translated strings |
+| **💬 Professional Tooltips** | Hover cards: Key Services, Primary Audience, Interaction Level |
+| **📋 Copy URL** | One-click copy buttons on all sites |
+| **📈 Stats Bar** | Live site count + last updated |
+| **📱 Fully Responsive** | Mobile-first, horizontal scroll navs, touch-optimized |
+| **♿ Accessibility** | ARIA labels, keyboard nav, focus-visible, reduced-motion |
+| **⚡ Performance** | Instant load (inline data), no external fetches |
+| **🛡️ Clean** | No ads/trackers/cookies, verified .gov.np only |
+| **📂 150+ Sites** | Comprehensive: Ministries/Departments/Provinces/Local Govts/Constitutional |
+| **🎨 Modern UI** | CSS vars, backdrop-blur, smooth hovers/shadows |
+
+**Live Demo**: [nepal-gov-websites.netlify.app](https://nepal-gov-websites.netlify.app)
 
 ## 📂 Structure
 
@@ -47,25 +55,20 @@ Free, ad-free directory of **all official Nepal government websites** (.gov.np d
 
 ## 🆙 Updating Sites
 
-**Data lives in `js/script.js`** (search for `sitesData` array).
+**Data**: Inline `sitesData` array in `js/script.js` (~150 sites).
 
-1. Edit `js/script.js` → Add/update site objects:
+1. Add/update sites:
    ```js
-   {
-     name: "Ministry Name",
-     url: "https://ministry.gov.np",
-     cat: "Ministry",
-     desc: "Description here",
-     status: "active"
-     // Tags auto-generated from name/desc
-   }
+   { name: "New Dept", url: "https://new.gov.np", cat: "Department", 
+     desc: "Description (keywords trigger tags)", status: "active" }
    ```
+   *`generateTags()` auto-adds: Passport/Tax/etc. from desc*
 
-2. Update `lastUpdated` date in script.js.
+2. Test: Reload `index.html` → New site appears w/ tags/filterable.
 
-**New:** Tags auto-generated via keywords (Passport=Passport sites, Health=Health/Hospital, etc.)
+3. Commit → Drag to [Netlify](https://netlify.com/drop).
 
-3. Test locally, then deploy.
+**Pro Tip**: Use desc keywords (passport/health/tax/police) for auto-tagging! 🚀
 
 **Suggest missing sites**: [Google Form](https://forms.gle/stcFLz9tLyjjsvNr9)
 
@@ -99,11 +102,22 @@ npm create netlify@latest
 
 ## 📋 Change Log
 
-### [Latest]
-- Add your updates here
+### Latest (2024)
+✅ **AI-Powered Features** (per TODO.md):
+- `generateTags()`: 18+ responsibility tags (Passport/Tax/etc.) from keywords, excludes cat names
+- Dual navs: Category (w/ metrics/tooltips) → Tag filters
+- `enrichDetails()`: Professional tooltips (Services/Audience/Interaction)
+- Dark/Light mode: CSS vars + auto-detect + toggle
+- Search includes tags, enhanced logic
+- Copy URL buttons w/ feedback
+- Stats bar (live count/updated)
+- Bilingual polish (50+ strings)
+- 150+ sanitized sitesData, categories enriched
+- Responsive CSS: backdrops/shadows/hovers/mobile-scroll
 
-### Previous Updates
-*(Track your contributions!)*
+**SitesData**: Trimmed/sanitized ~150 verified .gov.np (Ministries→Local Govts)
+
+**Test**: `start "" "index.html"` (Windows)
 
 ## 🙏 Credits
 
