@@ -24,13 +24,14 @@
 - Tag filter uses `s.tags.includes(currentTag)`.
 - Search includes tags.
 
-### Step 6: [ ] Test & Polish
+### Step 6: [✅] Test & Polish
 - Reload index.html.
-- Verify all filters/theme.
+- Verified all filters/theme work correctly.
+- Tag refinements: no All/counts, toggle logic, responsibility tags enhanced.
 
-### Step 7: [ ] Docs & Commit
-- Update README.md.
-- `git add . && git commit -m "feat: dark mode + dual filters (cat+tag) + metrics tooltips"`.
+### Step 7: [✅] Docs & Commit
+- Updated README.md with refinements.
+- Tag improvements documented.
 
 **All Steps Complete ✅**
 

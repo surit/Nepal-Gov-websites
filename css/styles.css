@@ -72,10 +72,10 @@
 .tag-btn {
   background: var(--card);
   border: 1px solid var(--border);
-  padding: 0.4rem 0.8rem;
+  padding: 0.35rem 0.7rem;
   border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 500;
+  font-size: 0.75rem;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
   color: var(--text);
