@@ -1,11 +1,11 @@
-// js/script.js - V2.1.0 Complete (Inline Data Version)
+// js/script.js - V2 Complete (Inline Data Version)
 // No external JSON fetch - works everywhere including file://
 
 // ========== SANITIZED DATA (trimmed, no trailing spaces) ==========
 const sitesData = [
   // ========== Constitutional Bodies ==========
   { name: "Office of the President", url: "https://presidentofnepal.gov.np", desc: "Official office of the President of Nepal.", cat: "Constitutional", status: "active" },
-  { name: "Office of the Vice President", url: "https://vp.gov.np", desc: "Official office of the Vice President of Nepal.", cat: "Constitutional", status: "active" },
+  //{ name: "Office of the Vice President", url: "https://vp.gov.np", desc: "Official office of the Vice President of Nepal.", cat: "Constitutional", status: "active" },
   { name: "Supreme Court of Nepal", url: "https://supremecourt.gov.np", desc: "Highest court of Nepal with appellate jurisdiction.", cat: "Constitutional", status: "active" },
   { name: "Public Service Commission Nepal", url: "https://psc.gov.np", desc: "Recruitment for civil service & government positions.", cat: "Constitutional", status: "active" },
   { name: "Election Commission Nepal", url: "https://election.gov.np", desc: "Conducting free & fair elections at all levels.", cat: "Constitutional", status: "active" },
@@ -72,7 +72,6 @@ const sitesData = [
   { name: "Department of Survey", url: "https://dos.gov.np", desc: "Land surveying, mapping & geospatial data management.", cat: "Department", status: "active" },
   { name: "Department of Urban Development and Building Construction", url: "https://dudbc.gov.np", desc: "Urban planning, building codes & construction regulation.", cat: "Department", status: "active" },
   { name: "Department of Water Resources and Irrigation", url: "https://dwri.gov.np", desc: "Water resource management, irrigation systems & watershed development.", cat: "Department", status: "active" },
-  { name: "Department of Water Supply and Sewerage", url: "https://dwssm.gov.np", desc: "Drinking water & sanitation infrastructure planning and management.", cat: "Department", status: "active" },
 
   // ========== Authorities & Boards ==========
   { name: "Nepal Rastra Bank", url: "https://nrb.org.np", desc: "Central bank & monetary authority.", cat: "Authority", status: "active" },
@@ -126,9 +125,6 @@ const sitesData = [
   { name: "Itahari Sub-Metropolitan City", url: "https://itaharimun.gov.np", desc: "Municipal services for Itahari, Sunsari.", cat: "Local Govt", status: "active" },
   { name: "Dharan Sub-Metropolitan City", url: "https://dharanmun.gov.np", desc: "Municipal services for Dharan, Sunsari.", cat: "Local Govt", status: "active" },
   { name: "Butwal Sub-Metropolitan City", url: "https://butwalmun.gov.np", desc: "Municipal services for Butwal, Rupandehi.", cat: "Local Govt", status: "active" },
-  { name: "Rajbiraj Municipality", url: "https://rajbirajmun.gov.np", desc: "Municipal services for Rajbiraj, Saptari.", cat: "Local Govt", status: "active" },
-  { name: "Mahadeva Municipality", url: "https://mahadevamun.gov.np", desc: "Municipal services for Mahadeva, Saptari.", cat: "Local Govt", status: "active" },
-  { name: "Tulsipur Sub-Metropolitan City", url: "https://tulsipurmun.gov.np", desc: "Municipal services for Tulsipur, Dang.", cat: "Local Govt", status: "active" },
 
   // ========== Municipalities (Major) ==========
   { name: "Mechinagar Municipality", url: "https://mechinagarmun.gov.np", desc: "Municipal services for Mechinagar, Jhapa.", cat: "Local Govt", status: "active" },
@@ -172,6 +168,15 @@ const sitesData = [
   { name: "Konjyosom Rural Municipality", url: "https://konjyosomrm.gov.np", desc: "Rural municipal services for Konjyosom, Sindhupalchok.", cat: "Local Govt", status: "active" },
   { name: "Gauradaha Municipality", url: "https://gauradahamun.gov.np", desc: "Municipal services for Gauradaha, Jhapa.", cat: "Local Govt", status: "active" },
 
+  // ========== Portals & Service Platforms ==========
+ // { name: "Online Driving License System", url: "https://drivinglicense.gov.np", desc: "Online driving license application, renewal & verification system.", cat: "Portal", status: "active" },
+  //{ name: "Centralized Email System", url: "https://email.gov.np", desc: "Government email services for officials and departments.", cat: "Portal", status: "active" },
+  //{ name: "Nepal Government National Portal", url: "https://nepal.gov.np", desc: "Official portal of Government of Nepal - gateway to all services.", cat: "Portal", status: "active" },
+  //{ name: "Nepal Kanun Patrika", url: "https://kanunpatrika.gov.np", desc: "Official gazette publication, laws & legal notices.", cat: "Portal", status: "active" },
+  //{ name: "Nepal Trade Information Portal", url: "https://ntip.gov.np", desc: "Trade data, market information & export-import guidance.", cat: "Portal", status: "active" },
+
+
+
   // ========== Hospitals & Health Institutions ==========
   { name: "Bharatpur Hospital", url: "https://bharatpurhospital.gov.np", desc: "Government teaching hospital - ENT, general physician, dental services.", cat: "Hospital", status: "active" },
   { name: "Kanti Children's Hospital", url: "https://kantichildrenhospital.gov.np", desc: "Specialized pediatric hospital for children's healthcare.", cat: "Hospital", status: "active" },
@@ -188,7 +193,7 @@ let sites = sitesData;
 let currentCategory = 'All';
 let searchQuery = '';
 let currentLang = localStorage.getItem('lang') || 'en';
-const lastUpdated = '2026-04-23';
+const lastUpdated = '2026-04-20';
 
 // ========== DOM Elements ==========
 const grid = document.getElementById('grid');
