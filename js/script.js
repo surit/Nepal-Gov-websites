@@ -189,11 +189,126 @@ const sitesData = [
 ];
 
 // ========== State ==========
-let sites = sitesData;
+let sites = sitesData.map(generateTags); // Auto-generate tags
 let currentCategory = 'All';
+let currentTag = 'All';
 let searchQuery = '';
 let currentLang = localStorage.getItem('lang') || 'en';
-const lastUpdated = '2026-04-20';
+const lastUpdated = '2026-04-21';
+
+// ========== Tag Generation ==========
+function generateTags(site) {
+  let tags = new Set();
+  
+  // Keyword-based tagging from name/desc
+  const text = (site.name + ' ' + site.desc + ' ' + site.cat).toLowerCase();
+  
+  // Precise responsibility-based tags from desc only (no cat names)
+  if (text.includes('passport') || text.includes('पासपोर्ट')) tags.add('Passport');
+  if (text.includes('national id') || text.includes('आइडि') || text.includes('registration') || text.includes('birth') || text.includes('death')) tags.add('Civil Registry');
+  if (text.includes('visa') || text.includes('भिसा') || text.includes('immigration')) tags.add('Visa');
+  if (text.includes('tax') || text.includes('कर') || text.includes('revenue') || text.includes('ird')) tags.add('Tax');
+  if (text.includes('police') || text.includes('प्रहरी')) tags.add('Police');
+  if (text.includes('customs') || text.includes('कस्टम्स')) tags.add('Customs');
+  if (text.includes('court') || text.includes('अदालत') || text.includes('supreme')) tags.add('Court');
+  if (text.includes('health') || text.includes('hospital') || text.includes('स्वास्थ्य')) tags.add('Health');
+  if (text.includes('education') || text.includes('शिक्षा') || text.includes('teacher') || text.includes('exam')) tags.add('Education');
+  if (text.includes('energy') || text.includes('विद्युत') || text.includes('electricity') || text.includes('hydropower')) tags.add('Energy');
+  if (text.includes('road') || text.includes('transport') || text.includes('vehicle')) tags.add('Transport');
+  if (text.includes('land') || text.includes('जग्गा') || text.includes('survey') || text.includes('archive')) tags.add('Land Records');
+  if (text.includes('election') || text.includes('निर्वाचन')) tags.add('Election');
+  if (text.includes('agricultur') || text.includes('कृषि') || text.includes('livestock') || text.includes('farmer')) tags.add('Agriculture');
+  if (text.includes('tourism') || text.includes('पर्यटन')) tags.add('Tourism');
+  if (text.includes('bank') || text.includes('budget') || text.includes('finance')) tags.add('Finance');
+  if (text.includes('water') || text.includes('जल') || text.includes('irrigation') || text.includes('sanitation')) tags.add('Water');
+  if (text.includes('recruit') || text.includes('employment') || text.includes('service commission')) tags.add('Jobs');
+  if (text.includes('audit') || text.includes('account')) tags.add('Audit');
+  if (text.includes('statistics') || text.includes('census') || text.includes('data')) tags.add('Statistics');
+  if (text.includes('procurement') || text.includes('tender')) tags.add('Procurement');
+  
+  // Filter out category names to avoid repeats
+  const categoryNames = ['Local Govt', 'Ministry', 'Department', 'Authority', 'Constitutional', 'Board', 'Commission', 'Program', 'Hospital', 'Trust', 'Institute', 'Office', 'Council'];
+  categoryNames.forEach(name => tags.delete(name));
+  
+  // Category-based fallback
+  if (site.cat === 'Local Govt') tags.add('Local Govt');
+  
+  const siteWithTags = Object.assign(site, { tags: Array.from(tags) });
+  return enrichDetails(siteWithTags);
+}
+
+// ========== Professional Tooltip Enrichment ==========
+function enrichDetails(site) {
+  const details = {
+    services: [],
+    audience: "General Public",
+    interaction: "Medium - Informational & Support"
+  };
+
+  const text = (site.name + ' ' + site.desc).toLowerCase();
+  
+  // Logic to determine services based on tags/content
+  if (site.tags.includes('Passport')) {
+    details.services.push("E-passport applications", "Renewal services", "Passport status tracking");
+    details.interaction = "High - Direct service delivery";
+  }
+  if (site.tags.includes('Civil Registry')) {
+    details.services.push("National ID registration", "Birth/Death certification", "Vital records management");
+    details.interaction = "High - Critical citizen documentation";
+  }
+  if (site.tags.includes('Visa') || site.tags.includes('Immigration')) {
+    details.services.push("Visa applications & extensions", "Entry/Exit permits", "Travel advisories");
+    details.audience = "International Travelers & Citizens";
+  }
+  if (site.tags.includes('Tax') || site.tags.includes('Customs')) {
+    details.services.push("Electronic tax filing (e-Filing)", "Customs clearance services", "Revenue payment portal");
+    details.audience = "Citizens, Businesses & Importers";
+    details.interaction = "High - Financial & trade compliance";
+  }
+  if (site.tags.includes('Transport')) {
+    details.services.push("Driving license applications", "Vehicle registration", "Transport permit management");
+    details.interaction = "High - Mobility & licensing services";
+  }
+  if (site.tags.includes('Health')) {
+    details.services.push("Hospital & clinic locator", "Health service standards", "Epidemic alerts & data");
+    details.interaction = "High - Public wellness support";
+  }
+  if (site.tags.includes('Education')) {
+    details.services.push("Curriculum assessment", "Teacher licensing", "Results and certification");
+    details.audience = "Students, Teachers & Parents";
+  }
+  if (site.tags.includes('Jobs')) {
+    details.services.push("Civil service exams", "Job recruitment notices", "Application portal");
+    details.audience = "Job Seekers";
+    details.interaction = "High - Career & employment support";
+  }
+  if (site.cat === 'Local Govt' || site.cat === 'Provincial Govt') {
+    details.services.push("Local infrastructure development", "Permits and recommendations", "Public grievances handling");
+    details.audience = "Local Residents";
+    details.interaction = "High - Direct local governance";
+  }
+  if (site.cat === 'Ministry') {
+    details.services.push("Policy formulation", "National sector oversight", "Legislative drafting support");
+    details.audience = "Citizens & Institutional Bodies";
+    details.interaction = "Medium - Strategic & legal oversight";
+  }
+  if (site.tags.includes('Police')) {
+    details.services.push("Online first information reports", "Emergency response coordination", "Character verification");
+    details.interaction = "High - Security & protection services";
+  }
+  if (site.tags.includes('Finance') || site.tags.includes('Bank') || site.tags.includes('Authority')) {
+    details.services.push("Regulatory monitoring", "Public data and archives", "Standards & compliance enforcement");
+    details.audience = "Professionals, Businesses & Researchers";
+  }
+
+  // Fallback if empty
+  if (details.services.length === 0) {
+    details.services.push("Official announcements", "Departmental guidance", "Information dissemination");
+  }
+
+  return Object.assign(site, { details });
+}
+
 
 // ========== DOM Elements ==========
 const grid = document.getElementById('grid');
@@ -202,6 +317,8 @@ const categoryNav = document.getElementById('category-nav');
 const siteCountEl = document.getElementById('site-count');
 const lastUpdatedEl = document.getElementById('last-updated');
 const langToggle = document.getElementById('lang-toggle');
+const themeToggle = document.getElementById('theme-toggle');
+const tagNav = document.getElementById('tag-nav');
 
 // ========== Helpers ==========
 const escapeHtml = (str) => {
@@ -223,30 +340,61 @@ const getTranslation = (key) => {
 
 // ========== Render Functions ==========
 function renderCategories() {
-  const categories = ['All', ...new Set(sites.map(s => s.cat))];
-  categoryNav.innerHTML = categories.map(cat => `
-    <button class="cat-btn ${cat === currentCategory ? 'active' : ''}" 
-            data-cat="${escapeHtml(cat)}" 
-            aria-pressed="${cat === currentCategory}">
-      ${escapeHtml(cat)}
-    </button>
-  `).join('');
+  const categories = ['All', ...Array.from(new Set(sites.map(s => s.cat)))].sort();
+  const counts = {};
+  sites.forEach(s => counts[s.cat] = (counts[s.cat] || 0) + 1);
+  const totalCount = sites.length;
+  
+  categoryNav.innerHTML = categories.map(cat => {
+    const count = cat === 'All' ? totalCount : (counts[cat] || 0);
+    return `
+      <button class="cat-btn ${cat === currentCategory ? 'active' : ''}" 
+              data-cat="${escapeHtml(cat)}" 
+              aria-pressed="${cat === currentCategory}"
+              title="${cat} (${count} sites)"
+              aria-label="${cat} - ${count} sites">
+        ${escapeHtml(cat)} <span class="count">(${count})</span>
+      </button>
+    `;
+  }).join('');
 }
+
+function renderTags() {
+  const filteredForCat = currentCategory === 'All' ? sites : sites.filter(s => s.cat === currentCategory);
+  const uniqueTags = Array.from(new Set(filteredForCat.flatMap(s => s.tags))).sort();
+  
+  // If current tag is no longer available in this category, reset it
+  if (currentTag !== 'All' && !uniqueTags.includes(currentTag)) {
+    currentTag = 'All';
+  }
+
+  tagNav.innerHTML = uniqueTags.map(tag => {
+    return `
+      <button class="tag-btn ${tag === currentTag ? 'active' : ''}" 
+              data-tag="${escapeHtml(tag)}">
+        ${escapeHtml(tag)}
+      </button>
+    `;
+  }).join('');
+}
+
 
 function renderGrid() {
   const q = searchQuery.toLowerCase();
   const filtered = sites.filter(s => {
     const matchesCat = currentCategory === 'All' || s.cat === currentCategory;
+    const matchesTag = currentTag === 'All' || s.tags.includes(currentTag);
     const matchesSearch = !q || 
       s.name.toLowerCase().includes(q) || 
       s.url.toLowerCase().includes(q) || 
       s.desc.toLowerCase().includes(q) || 
-      s.cat.toLowerCase().includes(q);
-    return matchesCat && matchesSearch;
+      s.cat.toLowerCase().includes(q) ||
+      s.tags.some(t => t.toLowerCase().includes(q));
+    return matchesCat && matchesTag && matchesSearch;
   });
 
   if (siteCountEl) {
-    siteCountEl.innerHTML = `📈 <strong>${filtered.length}</strong> sites`;
+    siteCountEl.innerHTML = `📈 <strong>${filtered.length}</strong> ${getTranslation('sitesCount') || 'sites'}`;
   }
 
   if (filtered.length === 0) {
@@ -260,6 +408,29 @@ function renderGrid() {
     
     return `
       <article class="card">
+        <div class="details-trigger" aria-label="More Info">i</div>
+        <div class="tooltip">
+          <div class="tooltip-header">
+            <span>🏛️</span> ${getTranslation('detailsTitle') || 'Organization Insights'}
+          </div>
+          <div class="tooltip-section">
+            <span class="tooltip-label">${getTranslation('labelServices') || 'Key Services'}</span>
+            <span class="tooltip-content">
+              <ul>
+                ${s.details.services.map(serve => `<li>${serve}</li>`).join('')}
+              </ul>
+            </span>
+          </div>
+          <div class="tooltip-section">
+            <span class="tooltip-label">${getTranslation('labelAudience') || 'Primary Audience'}</span>
+            <span class="tooltip-content">${s.details.audience}</span>
+          </div>
+          <div class="tooltip-section">
+            <span class="tooltip-label">${getTranslation('labelInteraction') || 'Public Interaction'}</span>
+            <span class="tooltip-content">${s.details.interaction}</span>
+          </div>
+        </div>
+
         <h3>${escapeHtml(s.name)}</h3>
         <a href="${escapeHtml(s.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(displayUrl)}</a>
         <p>${escapeHtml(s.desc)}</p>
@@ -307,6 +478,20 @@ function handleCategoryClick(e) {
   if (!btn) return;
   currentCategory = btn.dataset.cat;
   renderCategories();
+  renderTags();
+  renderGrid();
+}
+
+function handleTagClick(e) {
+  const btn = e.target.closest('.tag-btn');
+  if (!btn) return;
+  const newTag = btn.dataset.tag;
+  if (currentTag === newTag) {
+    currentTag = 'All';
+  } else {
+    currentTag = newTag;
+  }
+  renderTags();
   renderGrid();
 }
 
@@ -342,10 +527,14 @@ function handleLangToggle() {
 
 // ========== Event Listeners ==========
 categoryNav.addEventListener('click', handleCategoryClick);
+tagNav.addEventListener('click', handleTagClick);
 searchInput.addEventListener('input', handleSearchInput);
 grid.addEventListener('click', handleCopyUrl);
 if (langToggle) {
   langToggle.addEventListener('click', handleLangToggle);
+}
+if (themeToggle) {
+  themeToggle.addEventListener('click', handleThemeToggle);
 }
 
 // ========== Init ==========
@@ -355,10 +544,25 @@ function init() {
     grid.innerHTML = '';
   }
   
+  // Theme init
+  const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  
   applyTranslations();
   renderCategories();
+  renderTags();
   renderGrid();
 }
+
+function handleThemeToggle() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  themeToggle.textContent = next === 'dark' ? '☀️' : '🌙';
+}
+
+if (themeToggle) themeToggle.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
 
 // Start the app
 document.addEventListener('DOMContentLoaded', init);
