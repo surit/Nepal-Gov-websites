@@ -1,0 +1,10 @@
+{
+  "name": "nepal-gov-status-checker",
+  "private": true,
+  "scripts": {
+    "check": "node scripts/check-status.js"
+  },
+  "dependencies": {
+    "node-fetch": "^2.7.0"
+  }
+}
