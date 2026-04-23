@@ -1,11 +1,11 @@
-// js/script.js - V2 Complete (Inline Data Version)
+// js/script.js - V2.1 Complete (Inline Data + Community Submissions)
 // No external JSON fetch - works everywhere including file://
 
 // ========== SANITIZED DATA (trimmed, no trailing spaces) ==========
 const sitesData = [
   // ========== Constitutional Bodies ==========
   { name: "Office of the President", url: "https://presidentofnepal.gov.np", desc: "Official office of the President of Nepal.", cat: "Constitutional", status: "active" },
-  //{ name: "Office of the Vice President", url: "https://vp.gov.np", desc: "Official office of the Vice President of Nepal.", cat: "Constitutional", status: "active" },
+  { name: "Office of the Vice President", url: "https://vp.gov.np", desc: "Official office of the Vice President of Nepal.", cat: "Constitutional", status: "active" },
   { name: "Supreme Court of Nepal", url: "https://supremecourt.gov.np", desc: "Highest court of Nepal with appellate jurisdiction.", cat: "Constitutional", status: "active" },
   { name: "Public Service Commission Nepal", url: "https://psc.gov.np", desc: "Recruitment for civil service & government positions.", cat: "Constitutional", status: "active" },
   { name: "Election Commission Nepal", url: "https://election.gov.np", desc: "Conducting free & fair elections at all levels.", cat: "Constitutional", status: "active" },
@@ -72,6 +72,8 @@ const sitesData = [
   { name: "Department of Survey", url: "https://dos.gov.np", desc: "Land surveying, mapping & geospatial data management.", cat: "Department", status: "active" },
   { name: "Department of Urban Development and Building Construction", url: "https://dudbc.gov.np", desc: "Urban planning, building codes & construction regulation.", cat: "Department", status: "active" },
   { name: "Department of Water Resources and Irrigation", url: "https://dwri.gov.np", desc: "Water resource management, irrigation systems & watershed development.", cat: "Department", status: "active" },
+  // 🆕 COMMUNITY SUBMISSION: Department of Water Supply and Sewerage
+  { name: "Department of Water Supply and Sewerage", url: "https://dwss.gov.np", desc: "Drinking water & sanitation infrastructure planning and management.", cat: "Department", status: "active" },
 
   // ========== Authorities & Boards ==========
   { name: "Nepal Rastra Bank", url: "https://nrb.org.np", desc: "Central bank & monetary authority.", cat: "Authority", status: "active" },
@@ -167,15 +169,18 @@ const sitesData = [
   { name: "Mahalaxmi Municipality", url: "https://mahalaxmimun.gov.np", desc: "Municipal services for Mahalaxmi, Lalitpur.", cat: "Local Govt", status: "active" },
   { name: "Konjyosom Rural Municipality", url: "https://konjyosomrm.gov.np", desc: "Rural municipal services for Konjyosom, Sindhupalchok.", cat: "Local Govt", status: "active" },
   { name: "Gauradaha Municipality", url: "https://gauradahamun.gov.np", desc: "Municipal services for Gauradaha, Jhapa.", cat: "Local Govt", status: "active" },
+  // 🆕 COMMUNITY SUBMISSIONS - Apr 2026
+  { name: "Rajbiraj Municipality", url: "https://rajbirajmun.gov.np", desc: "Municipal services for Rajbiraj, Saptari.", cat: "Local Govt", status: "active" },
+  { name: "Mahadeva Municipality", url: "https://mahadevamun.gov.np", desc: "Municipal services for Mahadeva, Saptari.", cat: "Local Govt", status: "active" },
+  { name: "Tulsipur Sub-Metropolitan City", url: "https://tulsipurmun.gov.np", desc: "Municipal services for Tulsipur, Dang.", cat: "Local Govt", status: "active" },
+  // 🆕 END COMMUNITY SUBMISSIONS
 
   // ========== Portals & Service Platforms ==========
- // { name: "Online Driving License System", url: "https://drivinglicense.gov.np", desc: "Online driving license application, renewal & verification system.", cat: "Portal", status: "active" },
+  // { name: "Online Driving License System", url: "https://drivinglicense.gov.np", desc: "Online driving license application, renewal & verification system.", cat: "Portal", status: "active" },
   //{ name: "Centralized Email System", url: "https://email.gov.np", desc: "Government email services for officials and departments.", cat: "Portal", status: "active" },
   //{ name: "Nepal Government National Portal", url: "https://nepal.gov.np", desc: "Official portal of Government of Nepal - gateway to all services.", cat: "Portal", status: "active" },
   //{ name: "Nepal Kanun Patrika", url: "https://kanunpatrika.gov.np", desc: "Official gazette publication, laws & legal notices.", cat: "Portal", status: "active" },
   //{ name: "Nepal Trade Information Portal", url: "https://ntip.gov.np", desc: "Trade data, market information & export-import guidance.", cat: "Portal", status: "active" },
-
-
 
   // ========== Hospitals & Health Institutions ==========
   { name: "Bharatpur Hospital", url: "https://bharatpurhospital.gov.np", desc: "Government teaching hospital - ENT, general physician, dental services.", cat: "Hospital", status: "active" },
@@ -194,7 +199,7 @@ let currentCategory = 'All';
 let currentTag = 'All';
 let searchQuery = '';
 let currentLang = localStorage.getItem('lang') || 'en';
-const lastUpdated = '2026-04-21';
+const lastUpdated = '2026-04-23';
 
 // ========== Tag Generation ==========
 function generateTags(site) {
@@ -220,7 +225,7 @@ function generateTags(site) {
   if (text.includes('agricultur') || text.includes('कृषि') || text.includes('livestock') || text.includes('farmer')) tags.add('Agriculture');
   if (text.includes('tourism') || text.includes('पर्यटन')) tags.add('Tourism');
   if (text.includes('bank') || text.includes('budget') || text.includes('finance')) tags.add('Finance');
-  if (text.includes('water') || text.includes('जल') || text.includes('irrigation') || text.includes('sanitation')) tags.add('Water');
+  if (text.includes('water') || text.includes('जल') || text.includes('irrigation') || text.includes('sanitation') || text.includes('sewerage')) tags.add('Water');
   if (text.includes('recruit') || text.includes('employment') || text.includes('service commission')) tags.add('Jobs');
   if (text.includes('audit') || text.includes('account')) tags.add('Audit');
   if (text.includes('statistics') || text.includes('census') || text.includes('data')) tags.add('Statistics');
@@ -299,6 +304,11 @@ function enrichDetails(site) {
   if (site.tags.includes('Finance') || site.tags.includes('Bank') || site.tags.includes('Authority')) {
     details.services.push("Regulatory monitoring", "Public data and archives", "Standards & compliance enforcement");
     details.audience = "Professionals, Businesses & Researchers";
+  }
+  if (site.tags.includes('Water')) {
+    details.services.push("Drinking water infrastructure", "Sewerage system planning", "Sanitation service coordination");
+    details.audience = "Municipalities, Engineers & Residents";
+    details.interaction = "Medium - Infrastructure planning & support";
   }
 
   // Fallback if empty
@@ -525,6 +535,14 @@ function handleLangToggle() {
   applyTranslations();
 }
 
+function handleThemeToggle() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  if (themeToggle) themeToggle.textContent = next === 'dark' ? '☀️' : '🌙';
+}
+
 // ========== Event Listeners ==========
 categoryNav.addEventListener('click', handleCategoryClick);
 tagNav.addEventListener('click', handleTagClick);
@@ -547,22 +565,13 @@ function init() {
   // Theme init
   const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
   document.documentElement.setAttribute('data-theme', savedTheme);
+  if (themeToggle) themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
   
   applyTranslations();
   renderCategories();
   renderTags();
   renderGrid();
 }
-
-function handleThemeToggle() {
-  const current = document.documentElement.getAttribute('data-theme');
-  const next = current === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('theme', next);
-  themeToggle.textContent = next === 'dark' ? '☀️' : '🌙';
-}
-
-if (themeToggle) themeToggle.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
 
 // Start the app
 document.addEventListener('DOMContentLoaded', init);
