@@ -18,7 +18,12 @@ const translations = {
     copied: "✓ Copied!",
     online: "Online",
     offline: "Offline",
-    noResults: "No sites match your filters."
+    noResults: "No sites match your filters.",
+    sitesCount: "sites",
+    detailsTitle: "Organization Insights",
+    labelServices: "Key Services",
+    labelAudience: "Primary Audience",
+    labelInteraction: "Public Interaction"
   },
   ne: {
     pageTitle: "नेपाल सरकारका वेबसाइटहरू - निर्देशिका",
@@ -38,7 +43,12 @@ const translations = {
     copied: "✓ प्रतिलिपि गरियो!",
     online: "सक्रिय",
     offline: "निष्क्रिय",
-    noResults: "तपाईंको खोजसँग मेल खाने कुनै साइट छैन।"
+    noResults: "तपाईंको खोजसँग मेल खाने कुनै साइट छैन।",
+    sitesCount: "साइटहरू",
+    detailsTitle: "संगठन जानकारी",
+    labelServices: "प्रमुख सेवाहरू",
+    labelAudience: "प्राथमिक दर्शक",
+    labelInteraction: "सार्वजनिक अन्तरक्रिया"
   }
 };
 
