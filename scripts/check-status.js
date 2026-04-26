@@ -1,4 +1,4 @@
-// scripts/check-status.js - Bulletproof Parser
+// scripts/check-status.js - Fixed for sitesData + trailing spaces
 const fetch = require('node-fetch');
 const fs = require('fs');
 
@@ -6,42 +6,32 @@ const SCRIPT_PATH = 'js/script.js';
 const TIMEOUT_MS = 8000;
 const DELAY_MS = 800;
 
-// Ultra-simple parser: find "const sites = [" as literal string, then bracket-match
+// Parse sitesData array from your script.js format
 function parseSitesFromFile(filePath) {
   let content = fs.readFileSync(filePath, 'utf8');
-  
-  // Normalize line endings (handle Windows/Mac/Linux)
   content = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
   
   console.log('🔍 Reading file:', filePath);
   
-  // Simple literal search for the array start
-  const arrayStartMarker = 'const sites = [';
+  // ✅ FIX: Look for sitesData instead of sites
+  const arrayStartMarker = 'const sitesData = [';
   const startIndex = content.indexOf(arrayStartMarker);
   
   if (startIndex === -1) {
-    // Fallback: try without "const"
-    const altStart = content.indexOf('sites = [');
-    if (altStart === -1) {
-      console.error('❌ Could not find "const sites = [" or "sites = [" in file');
-      console.error('🔍 File starts with:', content.substring(0, 300).replace(/\n/g, '\\n'));
-      throw new Error('Sites array not found - check script.js format');
-    }
-    return parseArrayFromContent(content.substring(altStart));
+    console.error('❌ Could not find "const sitesData = [" in file');
+    console.error('🔍 File starts with:', content.substring(0, 400).replace(/\n/g, '\\n'));
+    throw new Error('Sites array not found - check script.js format');
   }
   
-  // Extract from after "const sites = ["
   const afterMarker = content.substring(startIndex + arrayStartMarker.length);
   return parseArrayFromContent(afterMarker);
 }
 
 // Manual bracket matching to extract the array
 function parseArrayFromContent(content) {
-  // Find the opening bracket
   const openIdx = content.indexOf('[');
   if (openIdx === -1) throw new Error('Could not find array opening bracket');
   
-  // Manual bracket/quote tracking to find the matching closing bracket
   let depth = 1;
   let inString = false;
   let escapeNext = false;
@@ -50,37 +40,22 @@ function parseArrayFromContent(content) {
   for (let i = openIdx + 1; i < content.length; i++) {
     const char = content[i];
     
-    if (escapeNext) {
-      escapeNext = false;
-      continue;
-    }
-    if (char === '\\' && inString) {
-      escapeNext = true;
-      continue;
-    }
-    if (char === '"' || char === "'") {
-      inString = !inString;
-      continue;
-    }
+    if (escapeNext) { escapeNext = false; continue; }
+    if (char === '\\' && inString) { escapeNext = true; continue; }
+    if (char === '"' || char === "'") { inString = !inString; continue; }
     if (inString) continue;
     
     if (char === '[') depth++;
     if (char === ']') {
       depth--;
-      if (depth === 0) {
-        endIndex = i + 1;
-        break;
-      }
+      if (depth === 0) { endIndex = i + 1; break; }
     }
   }
   
-  if (endIndex === -1) {
-    throw new Error('Could not find matching closing bracket - check for syntax errors in sites array');
-  }
+  if (endIndex === -1) throw new Error('Could not find matching closing bracket');
   
   const arrayStr = content.substring(0, endIndex);
   
-  // Safe eval for controlled source
   try {
     const sites = eval(`(function(){ return ${arrayStr}; })()`);
     if (!Array.isArray(sites)) throw new Error('Parsed result is not an array');
@@ -88,7 +63,6 @@ function parseArrayFromContent(content) {
     return sites;
   } catch (e) {
     console.error('💥 Parse error:', e.message);
-    console.error('📋 Array snippet (first 300 chars):', arrayStr.substring(0, 300) + '...');
     throw new Error(`Failed to parse sites: ${e.message}`);
   }
 }
@@ -99,7 +73,7 @@ async function checkUrl(url, retries = 0) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
     
-    const response = await fetch(url, {
+    const response = await fetch(url.trim(), {
       method: 'HEAD',
       headers: { 
         'User-Agent': 'NepalGovDirectory-StatusChecker/1.0 (+https://nepal.surit.com.np)',
@@ -121,16 +95,17 @@ async function checkUrl(url, retries = 0) {
   }
 }
 
-// Update script.js with new statuses
+// Update script.js with new statuses (handles trailing spaces)
 function updateScriptStatuses(sites, changes) {
   let content = fs.readFileSync(SCRIPT_PATH, 'utf8');
   let updated = 0;
   
   for (const change of changes) {
     const { url, to } = change;
-    const escapedUrl = url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    // ✅ FIX: Escape URL and allow trailing spaces in the value
+    const escapedUrl = url.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     
-    // Find site object by URL and update status (handles trailing spaces)
+    // Regex that handles trailing spaces in the status value
     const regex = new RegExp(
       `(\\{[^}]*?url\\s*:\\s*["']\\s*${escapedUrl}\\s*["'][^}]*?status\\s*:\\s*)["']\\s*([^"']+)\\s*["']`,
       's'
@@ -143,6 +118,7 @@ function updateScriptStatuses(sites, changes) {
         if (trimmedOld !== trimmedNew) {
           updated++;
           console.log(`✏️  ${change.name?.trim()}: ${trimmedOld} → ${trimmedNew}`);
+          // Preserve original quote style
           const quote = match.includes(`status: "${oldStatus}`) ? '"' : "'";
           return `${prefix}${quote}${to}${quote}`;
         }
@@ -181,9 +157,11 @@ async function main() {
     
     if (i > 0) await new Promise(r => setTimeout(r, DELAY_MS));
     
-    const result = await checkUrl(site.url?.trim());
+    // ✅ FIX: Trim URL before checking
+    const result = await checkUrl(site.url);
     
     if (result.success) {
+      // ✅ FIX: Trim status for comparison
       const wasActive = site.status?.trim() === 'active';
       const nowActive = result.isActive;
       
