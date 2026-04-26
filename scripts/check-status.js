@@ -1,4 +1,4 @@
-// scripts/check-status.js - Ultra-Robust Parser for Nepal Gov Directory
+// scripts/check-status.js - Bulletproof Parser
 const fetch = require('node-fetch');
 const fs = require('fs');
 
@@ -6,41 +6,49 @@ const SCRIPT_PATH = 'js/script.js';
 const TIMEOUT_MS = 8000;
 const DELAY_MS = 800;
 
-// Robust parser that handles comments, whitespace, and your exact format
+// Ultra-simple parser: find "const sites = [" as literal string, then bracket-match
 function parseSitesFromFile(filePath) {
-  const content = fs.readFileSync(filePath, 'utf8');
+  let content = fs.readFileSync(filePath, 'utf8');
   
-  // Debug: Show first 500 chars to verify file content
+  // Normalize line endings (handle Windows/Mac/Linux)
+  content = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  
   console.log('🔍 Reading file:', filePath);
-  console.log('📄 First 200 chars:', content.substring(0, 200).replace(/\n/g, '\\n'));
   
-  // Strategy: Find "const sites = [" allowing for comments/whitespace before it
-  const pattern = /const\s+sites\s*=\s*\[/;
-  const match = content.match(pattern);
+  // Simple literal search for the array start
+  const arrayStartMarker = 'const sites = [';
+  const startIndex = content.indexOf(arrayStartMarker);
   
-  if (!match) {
-    console.error('❌ Pattern not found. Searching for alternatives...');
-    // Try fallback patterns
-    if (content.includes('sites = [')) {
-      console.log('✅ Found "sites = [" without const');
+  if (startIndex === -1) {
+    // Fallback: try without "const"
+    const altStart = content.indexOf('sites = [');
+    if (altStart === -1) {
+      console.error('❌ Could not find "const sites = [" or "sites = [" in file');
+      console.error('🔍 File starts with:', content.substring(0, 300).replace(/\n/g, '\\n'));
+      throw new Error('Sites array not found - check script.js format');
     }
-    if (content.includes('const sites')) {
-      console.log('✅ Found "const sites" but not the array start');
-    }
-    throw new Error('Could not locate sites array definition. Check script.js format.');
+    return parseArrayFromContent(content.substring(altStart));
   }
   
-  const startIndex = match.index + match[0].length;
-  const remaining = content.substring(startIndex);
+  // Extract from after "const sites = ["
+  const afterMarker = content.substring(startIndex + arrayStartMarker.length);
+  return parseArrayFromContent(afterMarker);
+}
+
+// Manual bracket matching to extract the array
+function parseArrayFromContent(content) {
+  // Find the opening bracket
+  const openIdx = content.indexOf('[');
+  if (openIdx === -1) throw new Error('Could not find array opening bracket');
   
-  // Manual bracket matching to find array end (handles nested objects)
-  let depth = 1; // Start at 1 because we're after the opening [
+  // Manual bracket/quote tracking to find the matching closing bracket
+  let depth = 1;
   let inString = false;
   let escapeNext = false;
-  let endIndex = 0;
+  let endIndex = -1;
   
-  for (let i = 0; i < remaining.length; i++) {
-    const char = remaining[i];
+  for (let i = openIdx + 1; i < content.length; i++) {
+    const char = content[i];
     
     if (escapeNext) {
       escapeNext = false;
@@ -66,24 +74,21 @@ function parseSitesFromFile(filePath) {
     }
   }
   
-  if (endIndex === 0) {
-    throw new Error('Could not find closing bracket for sites array - check for syntax errors');
+  if (endIndex === -1) {
+    throw new Error('Could not find matching closing bracket - check for syntax errors in sites array');
   }
   
-  const arrayStr = '[' + remaining.substring(0, endIndex);
+  const arrayStr = content.substring(0, endIndex);
   
-  // Safe eval for controlled source (your repo)
+  // Safe eval for controlled source
   try {
-    // Wrap in function to avoid scope pollution
     const sites = eval(`(function(){ return ${arrayStr}; })()`);
-    if (!Array.isArray(sites)) {
-      throw new Error('Parsed result is not an array');
-    }
+    if (!Array.isArray(sites)) throw new Error('Parsed result is not an array');
     console.log(`✅ Parsed ${sites.length} sites successfully`);
     return sites;
   } catch (e) {
     console.error('💥 Parse error:', e.message);
-    console.error('📋 Array snippet:', arrayStr.substring(0, 300) + '...');
+    console.error('📋 Array snippet (first 300 chars):', arrayStr.substring(0, 300) + '...');
     throw new Error(`Failed to parse sites: ${e.message}`);
   }
 }
@@ -125,7 +130,7 @@ function updateScriptStatuses(sites, changes) {
     const { url, to } = change;
     const escapedUrl = url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     
-    // Find site object by URL and update status (handles trailing spaces in values)
+    // Find site object by URL and update status (handles trailing spaces)
     const regex = new RegExp(
       `(\\{[^}]*?url\\s*:\\s*["']\\s*${escapedUrl}\\s*["'][^}]*?status\\s*:\\s*)["']\\s*([^"']+)\\s*["']`,
       's'
@@ -138,7 +143,6 @@ function updateScriptStatuses(sites, changes) {
         if (trimmedOld !== trimmedNew) {
           updated++;
           console.log(`✏️  ${change.name?.trim()}: ${trimmedOld} → ${trimmedNew}`);
-          // Preserve original quote style and spacing
           const quote = match.includes(`status: "${oldStatus}`) ? '"' : "'";
           return `${prefix}${quote}${to}${quote}`;
         }
